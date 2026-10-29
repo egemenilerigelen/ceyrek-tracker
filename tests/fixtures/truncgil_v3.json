@@ -1,0 +1,129 @@
+{
+ "Update_Date": "2026-10-29 16:45:03",
+ "USD": {
+  "Buying": "49,8339",
+  "Type": "Currency",
+  "Selling": "49,8417",
+  "Change": "%0,00"
+ },
+ "EUR": {
+  "Buying": "55,5269",
+  "Type": "Currency",
+  "Selling": "55,5478",
+  "Change": "%-0,05"
+ },
+ "ons": {
+  "Buying": "$4.021,23",
+  "Type": "Gold",
+  "Selling": "$4.021,86",
+  "Change": "%-1,13"
+ },
+ "gram-altin": {
+  "Buying": "6.443,31",
+  "Type": "Gold",
+  "Selling": "6.444,32",
+  "Change": "%-1,13"
+ },
+ "gram-has-altin": {
+  "Buying": "6.411,09",
+  "Type": "Gold",
+  "Selling": "6.412,10",
+  "Change": "%-1,13"
+ },
+ "ceyrek-altin": {
+  "Buying": "10.392,68",
+  "Type": "Gold",
+  "Selling": "10.632,48",
+  "Change": "%0,00"
+ },
+ "yarim-altin": {
+  "Buying": "20.720,42",
+  "Type": "Gold",
+  "Selling": "21.264,96",
+  "Change": "%0,00"
+ },
+ "tam-altin": {
+  "Buying": "41.570,74",
+  "Type": "Gold",
+  "Selling": "42.399,85",
+  "Change": "%0,00"
+ },
+ "cumhuriyet-altini": {
+  "Buying": "43.082,00",
+  "Type": "Gold",
+  "Selling": "43.724,00",
+  "Change": "%0,67"
+ },
+ "ata-altin": {
+  "Buying": "42.869,82",
+  "Type": "Gold",
+  "Selling": "43.960,58",
+  "Change": "%0,00"
+ },
+ "14-ayar-altin": {
+  "Buying": "3.702,39",
+  "Type": "Gold",
+  "Selling": "3.706,74",
+  "Change": "%0,00"
+ },
+ "18-ayar-altin": {
+  "Buying": "4.741,66",
+  "Type": "Gold",
+  "Selling": "4.747,22",
+  "Change": "%0,00"
+ },
+ "22-ayar-bilezik": {
+  "Buying": "5.923,83",
+  "Type": "Gold",
+  "Selling": "5.930,78",
+  "Change": "%0,00"
+ },
+ "ikibucuk-altin": {
+  "Buying": "103.926,85",
+  "Type": "Gold",
+  "Selling": "105.609,45",
+  "Change": "%0,00"
+ },
+ "besli-altin": {
+  "Buying": "210.451,87",
+  "Type": "Gold",
+  "Selling": "214.600,49",
+  "Change": "%0,00"
+ },
+ "gremse-altin": {
+  "Buying": "103.926,85",
+  "Type": "Gold",
+  "Selling": "106.324,79",
+  "Change": "%0,00"
+ },
+ "resat-altin": {
+  "Buying": "42.869,82",
+  "Type": "Gold",
+  "Selling": "43.960,58",
+  "Change": "%0,00"
+ },
+ "hamit-altin": {
+  "Buying": "42.869,82",
+  "Type": "Gold",
+  "Selling": "43.960,58",
+  "Change": "%0,00"
+ },
+ "gumus": {
+  "Buying": "83,35",
+  "Type": "Gold",
+  "Selling": "83,45",
+  "Change": "%-3,56"
+ },
+ "gram-platin": {
+  "Buying": "2.373,72",
+  "Type": "Gold",
+  "Selling": "2.378,48",
+  "Change": "%-3,85"
+ },
+ "gram-paladyum": {
+  "Buying": "1.602,24",
+  "Type": "Gold",
+  "Selling": "1.607,94",
+  "Change": "%-1,46"
+ }
+}

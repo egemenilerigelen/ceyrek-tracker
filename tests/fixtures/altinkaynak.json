@@ -1,0 +1,426 @@
+[
+ {
+  "Alis": "6.436",
+  "Satis": "6.482",
+  "Kod": "HH_T",
+  "Aciklama": "Has",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "6.404",
+  "Satis": "6.450",
+  "Kod": "CH_T",
+  "Aciklama": "Külçe",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "320.213",
+  "Satis": "328.884",
+  "Kod": "GA50",
+  "Aciklama": "50 GR 24 Ayar ",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "128.085",
+  "Satis": "131.760",
+  "Kod": "GA20",
+  "Aciklama": "20 GR 24 Ayar ",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "64.043",
+  "Satis": "65.467",
+  "Kod": "GA10",
+  "Aciklama": "10 GR 24 Ayar ",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "640.426",
+  "Satis": "657.897",
+  "Kod": "GA100",
+  "Aciklama": "100 GR 24 Ayar ",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "32.021",
+  "Satis": "32.801",
+  "Kod": "GA5",
+  "Aciklama": "5 GR 24 Ayar ",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "16.009",
+  "Satis": "16.443",
+  "Kod": "GA2",
+  "Aciklama": "2,5 GR 24 Ayar ",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "6.411",
+  "Satis": "6.517",
+  "Kod": "GA",
+  "Aciklama": "Gram Altın ",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "42.328",
+  "Satis": "45.695",
+  "Kod": "PA",
+  "Aciklama": "Ata Cumhuriyet",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "3.202.130",
+  "Satis": "3.280.457",
+  "Kod": "GA500",
+  "Aciklama": "500 GR 24 Ayar ",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "1.601.065",
+  "Satis": "1.633.617",
+  "Kod": "GA250",
+  "Aciklama": "250 GR 24 Ayar ",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "5.870",
+  "Satis": "5.912",
+  "Kod": "B_T",
+  "Aciklama": "22 Ayar Hurda",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "42.328",
+  "Satis": "43.350",
+  "Kod": "A_T",
+  "Aciklama": "Ata Toptan",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "5.870",
+  "Satis": "6.305",
+  "Kod": "PB",
+  "Aciklama": "22 Ayar Bilezik",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "6.411",
+  "Satis": "6.555",
+  "Kod": "PGA",
+  "Aciklama": "Gram Altın",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "3.638",
+  "Satis": "3.792",
+  "Kod": "14",
+  "Aciklama": "14 Ayar Altın",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "211.469",
+  "Satis": "216.901",
+  "Kod": "A5",
+  "Aciklama": "Ata Beşli",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "42.247",
+  "Satis": "46.951",
+  "Kod": "R",
+  "Aciklama": "Resat Altın",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "10.301",
+  "Satis": "10.860",
+  "Kod": "PC",
+  "Aciklama": "Çeyrek",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "42.247",
+  "Satis": "46.951",
+  "Kod": "H",
+  "Aciklama": "Hamit Altın",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "41.169",
+  "Satis": "42.520",
+  "Kod": "T",
+  "Aciklama": "Teklik",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "4.440",
+  "Satis": "4.862",
+  "Kod": "18",
+  "Aciklama": "18 Ayar Altın",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "102.861",
+  "Satis": "105.645",
+  "Kod": "G",
+  "Aciklama": "Gremse",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "10.301",
+  "Satis": "10.674",
+  "Kod": "C",
+  "Aciklama": "Çeyrek",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "20.582",
+  "Satis": "21.468",
+  "Kod": "Y",
+  "Aciklama": "Yarım",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "20.582",
+  "Satis": "21.720",
+  "Kod": "PY",
+  "Aciklama": "Yarım",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "41.169",
+  "Satis": "43.435",
+  "Kod": "PT",
+  "Aciklama": "Teklik",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "102.861",
+  "Satis": "108.580",
+  "Kod": "PG",
+  "Aciklama": "Gremse",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "42.247",
+  "Satis": "45.305",
+  "Kod": "PR",
+  "Aciklama": "Resat Altın",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "211.299",
+  "Satis": "220.306",
+  "Kod": "R5",
+  "Aciklama": "Resat Beşli",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "42.247",
+  "Satis": "43.250",
+  "Kod": "PH",
+  "Aciklama": "Hamit Altın",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "211.469",
+  "Satis": "228.685",
+  "Kod": "PA5",
+  "Aciklama": "Ata Beşli",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "3.638",
+  "Satis": "4.125",
+  "Kod": "P14",
+  "Aciklama": "14 Ayar Altın",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "6.404.259",
+  "Satis": "6.449.329",
+  "Kod": "CH1KG",
+  "Aciklama": "Külçe KG",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "4.440",
+  "Satis": "5.185",
+  "Kod": "P18",
+  "Aciklama": "18 Ayar Altın",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "1.930",
+  "Satis": "2.184",
+  "Kod": "8",
+  "Aciklama": "8 Ayar Altın",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "10.301",
+  "Satis": "10.508",
+  "Kod": "EC",
+  "Aciklama": "Eski Çeyrek",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "20.582",
+  "Satis": "20.846",
+  "Kod": "EY",
+  "Aciklama": "Eski Yarım",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "41.169",
+  "Satis": "41.671",
+  "Kod": "ET",
+  "Aciklama": "Eski Teklik",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "211.469",
+  "Satis": "218.808",
+  "Kod": "EA5",
+  "Aciklama": "Eski Ata Beşli",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "102.861",
+  "Satis": "104.032",
+  "Kod": "EG",
+  "Aciklama": "Eski Gremse",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "42.328",
+  "Satis": "43.230",
+  "Kod": "EA",
+  "Aciklama": "Eski Ata",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "19.583,13",
+  "Satis": "23.321,94",
+  "Kod": "AG250",
+  "Aciklama": "250 GR Gümüş ",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "4.074,90",
+  "Satis": "5.960,07",
+  "Kod": "AG50",
+  "Aciklama": "50 GR Gümüş ",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "38.857,85",
+  "Satis": "45.187,38",
+  "Kod": "AG500",
+  "Aciklama": "500 GR Gümüş ",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "77,38",
+  "Satis": "87,58",
+  "Kod": "AG_T",
+  "Aciklama": "Gümüş",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "77.382,43",
+  "Satis": "87.591,07",
+  "Kod": "AG1KG",
+  "Aciklama": "KG Külçe Gümüş",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "7.962,74",
+  "Satis": "10.351,08",
+  "Kod": "AG100",
+  "Aciklama": "100 GR Gümüş ",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "470,47",
+  "Satis": "2.027,73",
+  "Kod": "AG5",
+  "Aciklama": "5 GR Gümüş ",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "898,34",
+  "Satis": "2.456,29",
+  "Kod": "AG10",
+  "Aciklama": "10 GR Gümüş ",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "1.712,61",
+  "Satis": "3.284,68",
+  "Kod": "AG20",
+  "Aciklama": "20 GR Gümüş ",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": false
+ },
+ {
+  "Alis": "4.021,89",
+  "Satis": "4.021,89",
+  "Kod": "XAUUSD",
+  "Aciklama": "ONS",
+  "GuncellenmeZamani": "29.10.2026 16:54:00",
+  "IsMobile": true
+ }
+]
