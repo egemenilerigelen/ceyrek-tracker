@@ -1,0 +1,8 @@
+# Metin dosyaları depoda ve çalışma klasöründe LF olsun. Windows'ta CRLF'ye
+# çevrilmesi hem "LF will be replaced by CRLF" uyarılarına hem de ruff format
+# ile CI arasında satır sonu farklarına yol açıyordu.
+* text=auto eol=lf
+
+*.ico binary
+*.png binary
+*.exe binary

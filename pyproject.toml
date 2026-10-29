@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ceyrek-tracker"
+version = "0.1.0"
+description = "Altın fiyatlarını masaüstünde gösteren hafif Windows widget'ı"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Egemenilrgln", email = "egeilrgln@gmail.com" }]
+dependencies = [
+    "PySide6-Essentials>=6.7",
+    "requests>=2.31",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-qt>=4.4",
+    "ruff>=0.6",
+    "pyinstaller>=6.6",
+    "pillow>=10",  # yalnızca tools/make_icon.py için
+]
+
+[project.gui-scripts]
+ceyrek-takip = "ceyrek_tracker.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+ceyrek_tracker = ["assets/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+qt_api = "pyside6"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+# Arayüz metinleri Türkçe; "ı", "ş" gibi karakterler bilinçli kullanılıyor.
+ignore = ["RUF001", "RUF002", "RUF003"]
