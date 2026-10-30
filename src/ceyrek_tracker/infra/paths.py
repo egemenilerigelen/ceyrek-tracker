@@ -1,5 +1,6 @@
-"""Dosya konumları.
+"""Dosya konumları (ortak olanlar).
 
+Kartların kendi önbellek dosyası ilgili kartın paketinde belirlenir.
 Kullanıcı verisi (ayarlar, önbellek, log) her zaman %APPDATA%\\CeyrekTakip altında
 tutulur; uygulamanın hangi klasörden başlatıldığına bağlı değildir.
 """
@@ -12,7 +13,7 @@ from pathlib import Path
 from ceyrek_tracker import APP_NAME
 
 # PyInstaller da modülleri paket yapısıyla açtığı için __file__ her iki durumda çalışır.
-ASSETS_DIR = Path(__file__).resolve().parent / "assets"
+ASSETS_DIR = Path(__file__).resolve().parent.parent / "assets"
 ICON_PATH = ASSETS_DIR / "icon.ico"
 
 
@@ -29,10 +30,6 @@ def data_dir() -> Path:
 
 def settings_file() -> Path:
     return data_dir() / "settings.json"
-
-
-def snapshot_file() -> Path:
-    return data_dir() / "last_snapshot.json"
 
 
 def log_dir() -> Path:

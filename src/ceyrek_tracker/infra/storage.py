@@ -1,4 +1,4 @@
-"""JSON dosyalarını güvenli (atomik) okuma/yazma ve son verinin önbelleği."""
+"""JSON dosyalarını güvenli (atomik) okuma/yazma."""
 
 from __future__ import annotations
 
@@ -8,8 +8,6 @@ import os
 import tempfile
 from pathlib import Path
 from typing import Any
-
-from ceyrek_tracker.domain.models import Snapshot
 
 logger = logging.getLogger(__name__)
 
@@ -36,26 +34,3 @@ def write_json(path: Path, data: Any) -> None:
     except BaseException:
         Path(tmp).unlink(missing_ok=True)
         raise
-
-
-class SnapshotCache:
-    """Son başarılı veriyi saklar; uygulama açılır açılmaz ekranda bir şey olsun diye."""
-
-    def __init__(self, path: Path) -> None:
-        self.path = path
-
-    def load(self) -> Snapshot | None:
-        data = read_json(self.path)
-        if data is None:
-            return None
-        try:
-            return Snapshot.from_dict(data)
-        except (KeyError, TypeError, ValueError) as exc:
-            logger.warning("Önbellekteki veri geçersiz: %s", exc)
-            return None
-
-    def save(self, snapshot: Snapshot) -> None:
-        try:
-            write_json(self.path, snapshot.to_dict())
-        except OSError as exc:
-            logger.warning("Önbellek yazılamadı: %s", exc)
