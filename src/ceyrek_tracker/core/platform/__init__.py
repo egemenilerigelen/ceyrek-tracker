@@ -1,1 +1,1 @@
-"""İşletim sistemine (Windows) özgü bağdaştırıcılar: cam efekti, kısayol, tek kopya kilidi, fare."""
+"""Windows'a özgü bağdaştırıcılar: global kısayol, tek kopya kilidi, fare, görev çubuğu kimliği."""

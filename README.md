@@ -75,12 +75,13 @@ src/ceyrek_tracker/
 ├── app.py            # birleştirme noktası: AppController + giriş noktası (her şeyi bilen tek yer)
 ├── core/             # panel iskeleti; hiçbir karta bağımlı değil
 │   ├── settings.py       # ayarlar (settings.json) ve görünüm üretimi
-│   ├── panel_window.py   # çerçevesiz yüzen panel, kayma animasyonu, cam efekti
+│   ├── panel_window.py   # çerçevesiz yüzen panel, kayma animasyonu, yuvarlak köşeler
+│   ├── backdrop.py       # cam efekti: panel arkasının bulanık kopyası (Qt ile çizilir)
 │   ├── card_base.py · card_host.py · card_manager.py   # kart arayüzü, çerçevesi, yaşam döngüsü
 │   ├── auto_close.py     # dışarı tıklama / fare uzaklaşması kararı (fare ve saat enjekte edilir)
 │   ├── tray.py · header.py · polling.py · widgets.py · screens.py · turkish.py
 │   ├── trigger/          # tetikleyici arayüzü + tutamaç (kolay değişir)
-│   └── platform/         # Windows'a özgü: glass, hotkey, single_instance, mouse, appid
+│   └── platform/         # Windows'a özgü: hotkey, single_instance, mouse, appid
 ├── cards/            # her kart kendi paketi; kartlar birbirini bilmez
 │   ├── __init__.py       # kart kayıt defteri (CARDS)
 │   ├── weather/          # card · api · cache · places · icon · backdrop
