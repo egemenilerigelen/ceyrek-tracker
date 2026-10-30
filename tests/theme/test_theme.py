@@ -21,10 +21,9 @@ def test_metrics_scale_density_and_fonts():
 
 
 def test_look_resolution_and_stylesheet():
-    look = resolve_look("light", "compact", 1.2, accent="#112233", glass_opacity=0.5, blur=False)
+    look = resolve_look("light", "compact", 1.2, accent="#112233", glass_opacity=0.5)
     assert look.theme.name == "light"
     assert look.theme.accent == "#112233"
     assert look.theme.glass_opacity == 0.5
-    assert not look.blur
     assert "#112233" in look.stylesheet
     assert resolve_look("yok", "yok", 1.0).theme.name == "dark"

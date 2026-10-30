@@ -14,7 +14,6 @@ class Look:
 
     theme: Theme
     metrics: Metrics
-    blur: bool = True
 
     @property
     def stylesheet(self) -> str:
@@ -32,7 +31,6 @@ def resolve_look(
     font_scale: float,
     accent: str | None = None,
     glass_opacity: float | None = None,
-    blur: bool = True,
 ) -> Look:
     theme = THEMES.get(theme_name, THEMES["dark"])
     if accent:
@@ -40,7 +38,7 @@ def resolve_look(
     if glass_opacity is not None:
         theme = theme.with_glass_opacity(glass_opacity)
     metrics = Metrics(spacing=DENSITIES.get(density, 1.0), font=font_scale)
-    return Look(theme=theme, metrics=metrics, blur=blur)
+    return Look(theme=theme, metrics=metrics)
 
 
 __all__ = ["Look", "Metrics", "Theme", "resolve_look"]

@@ -35,7 +35,7 @@ değerler sessizce varsayılana döner). Ayarlar ekranı sonraki aşamada gelece
 | `trigger_screen` | Tutamacın ekranı: `primary` ya da ekran adı (ör. `\\.\DISPLAY2`) |
 | `handle_thickness`, `handle_length`, `handle_position` | Tutamacın boyutu ve dikey konumu (0 üst, 1 alt) |
 | `theme`, `accent`, `density`, `font_scale` | `dark`/`light`, `#rrggbb` vurgu, `compact`/`normal`/`relaxed`, yazı ölçeği |
-| `blur`, `glass_opacity`, `animations`, `animation_ms` | Cam efekti ve animasyonlar |
+| `glass_opacity`, `animations`, `animation_ms` | Panel zemininin opaklığı (0,3–1; varsayılan 0,92, düşürdükçe arkadaki pencereler daha çok görünür) ve animasyonlar |
 | `cards` | Her kart için `enabled`, `collapsed` ve `config` (ör. hava için `{"city": "Ankara"}`) |
 
 `Win+Alt+W` gibi bazı kısayollar başka uygulamalarca tutulmuş olabilir; kayıt başarısız
@@ -75,8 +75,8 @@ src/ceyrek_tracker/
 ├── app.py            # birleştirme noktası: AppController + giriş noktası (her şeyi bilen tek yer)
 ├── core/             # panel iskeleti; hiçbir karta bağımlı değil
 │   ├── settings.py       # ayarlar (settings.json) ve görünüm üretimi
-│   ├── panel_window.py   # çerçevesiz yüzen panel, kayma animasyonu, yuvarlak köşeler
-│   ├── backdrop.py       # cam efekti: panel arkasının bulanık kopyası (Qt ile çizilir)
+│   ├── panel_window.py   # çerçevesiz yüzen panel, kayma animasyonu
+│   ├── panel_surface.py  # yarı saydam, yuvarlak köşeli, dokulu panel zemini (Qt ile çizilir)
 │   ├── card_base.py · card_host.py · card_manager.py   # kart arayüzü, çerçevesi, yaşam döngüsü
 │   ├── auto_close.py     # dışarı tıklama / fare uzaklaşması kararı (fare ve saat enjekte edilir)
 │   ├── tray.py · header.py · polling.py · widgets.py · screens.py · turkish.py

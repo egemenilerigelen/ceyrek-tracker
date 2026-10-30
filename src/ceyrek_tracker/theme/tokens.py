@@ -52,7 +52,7 @@ def contrast_ratio(color_a: str, color_b: str) -> float:
 @dataclass(frozen=True)
 class Theme:
     name: str
-    # Zemin: cam efekti kapalıysa `bg`, `glass_opacity` kadar opak boyanır.
+    # Panel zemini `bg` renginin `glass_opacity` kadar opak boyanmış hâlidir.
     bg: str
     glass_opacity: float
     # Yüzeyler ve çizgiler `ink` renginin saydam tonlarıdır (koyu temada beyaz).
@@ -99,7 +99,7 @@ class Theme:
 DARK = Theme(
     name="dark",
     bg="#15130f",
-    glass_opacity=0.80,
+    glass_opacity=0.92,
     ink="#ffffff",
     surface_alpha=0.06,
     surface_hover_alpha=0.10,
@@ -117,7 +117,7 @@ DARK = Theme(
 LIGHT = Theme(
     name="light",
     bg="#f4f1ea",
-    glass_opacity=0.82,
+    glass_opacity=0.92,
     ink="#1d1a14",
     surface_alpha=0.05,
     surface_hover_alpha=0.09,

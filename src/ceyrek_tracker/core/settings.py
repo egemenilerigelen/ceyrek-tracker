@@ -97,8 +97,7 @@ class Settings:
     accent: str | None = None
     density: str = "normal"
     font_scale: float = 1.0
-    blur: bool = True
-    glass_opacity: float = 0.80
+    glass_opacity: float = 0.92
     cards: tuple[CardSetting, ...] = ()
 
     def with_changes(self, **changes: Any) -> Settings:
@@ -166,7 +165,6 @@ class Settings:
             accent=accent,
             density=_choice(data, "density", tuple(DENSITIES), d.density),
             font_scale=_number(data, "font_scale", 0.8, 1.6, d.font_scale),
-            blur=_flag(data, "blur", d.blur),
             glass_opacity=_number(data, "glass_opacity", 0.3, 1.0, d.glass_opacity),
             cards=tuple(cards),
         )
@@ -194,5 +192,4 @@ def look_from_settings(settings: Settings) -> Look:
         settings.font_scale,
         accent=settings.accent,
         glass_opacity=settings.glass_opacity,
-        blur=settings.blur,
     )
