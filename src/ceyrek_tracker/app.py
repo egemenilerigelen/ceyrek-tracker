@@ -1,275 +1,220 @@
-"""Uygulamanın giriş noktası ve bileşenleri birbirine bağlayan denetleyici."""
+"""Uygulamanın giriş noktası ve bileşenleri birbirine bağlayan denetleyici.
+
+Burası bileşenlerin tek bağlandığı yerdir (composition root): çekirdek (`core`) kartları,
+kartlar da birbirini bilmez; kimin kime bağlanacağı yalnızca burada belirlenir.
+"""
 
 from __future__ import annotations
 
-import contextlib
 import logging
 import sys
-from pathlib import Path
+from collections.abc import Sequence
 
-from PySide6.QtCore import QLockFile, QObject, QPoint, Slot
-from PySide6.QtGui import QGuiApplication, QIcon
-from PySide6.QtWidgets import QApplication, QMessageBox, QSystemTrayIcon
+from PySide6.QtCore import QObject, QTimer, Slot
+from PySide6.QtGui import QIcon, QScreen
+from PySide6.QtWidgets import QApplication, QMessageBox
 
-from ceyrek_tracker import APP_DISPLAY_NAME, APP_NAME, __version__, paths
-from ceyrek_tracker.domain.catalog import get_gold_type
-from ceyrek_tracker.domain.formatting import format_price
-from ceyrek_tracker.domain.models import FeedState, Snapshot
-from ceyrek_tracker.logging_setup import setup_logging
-from ceyrek_tracker.providers import PriceProvider, build_fetcher, create_providers
-from ceyrek_tracker.services.price_service import PriceService
-from ceyrek_tracker.settings import Settings, SettingsStore
-from ceyrek_tracker.storage import SnapshotCache
-from ceyrek_tracker.ui.main_window import WidgetWindow
-from ceyrek_tracker.ui.menu import AppMenu
+from ceyrek_tracker import APP_DISPLAY_NAME, APP_NAME, __version__
+from ceyrek_tracker.cards import CARDS
+from ceyrek_tracker.core.auto_close import PanelAutoClose, Pointer
+from ceyrek_tracker.core.card_base import CardSpec
+from ceyrek_tracker.core.card_manager import CardManager
+from ceyrek_tracker.core.panel_window import PanelWindow
+from ceyrek_tracker.core.platform.appid import set_app_user_model_id
+from ceyrek_tracker.core.platform.hotkey import HotkeyManager
+from ceyrek_tracker.core.platform.mouse import SystemPointer
+from ceyrek_tracker.core.platform.single_instance import acquire_single_instance
+from ceyrek_tracker.core.screens import resolve_screen
+from ceyrek_tracker.core.settings import SettingsStore, look_from_settings
+from ceyrek_tracker.core.tray import TrayIcon
+from ceyrek_tracker.core.trigger import create_trigger
+from ceyrek_tracker.infra import paths
+from ceyrek_tracker.infra.logging_setup import setup_logging
 
 logger = logging.getLogger(__name__)
 
-# Varsayılan konum: ekranın sağ üst köşesinden bu kadar içeride.
-SCREEN_MARGIN = 24
-
-
-def acquire_single_instance(lock_path: Path) -> QLockFile | None:
-    """Aynı anda tek widget çalışsın diye kilit alır; başka kopya varsa None döner.
-
-    Kilidi tutan işlem artık çalışmıyorsa (çökme, görev yöneticisinden sonlandırma) Qt
-    kilidi kendisi bayat sayıp temizler; uygulama çöktükten sonra da açılır. Süre bazlı
-    bayatlama kapatılır: widget günlerce açık kalır ve Qt'nin varsayılan 30 sn'si
-    sonrasında canlı bir kopyanın kilidi çalınabilirdi. Windows'ta açık dosya tutamacı
-    bunu zaten engeller; bu ayar Linux/macOS'ta da aynı davranışı garanti eder.
-    """
-    lock = QLockFile(str(lock_path))
-    lock.setStaleLockTime(0)
-    if lock.tryLock(100):
-        return lock
-    return None
+APP_USER_MODEL_ID = "CeyrekTakip.Panel"
 
 
 class AppController(QObject):
     def __init__(
-        self, app: QApplication, providers: dict[str, PriceProvider] | None = None
+        self,
+        app: QApplication,
+        specs: Sequence[CardSpec] | None = None,
+        hotkeys: HotkeyManager | None = None,
+        store: SettingsStore | None = None,
+        pointer: Pointer | None = None,
     ) -> None:
         super().__init__()
         self._app = app
-        self._store = SettingsStore(paths.settings_file())
-        self._settings = self._store.load()
-        self._cache = SnapshotCache(paths.snapshot_file())
-        self._providers = providers if providers is not None else create_providers()
-        self._tray_hint_shown = False
+        self._store = store or SettingsStore(paths.settings_file())
+        self.settings = self._store.load()
+        self.look = look_from_settings(self.settings)
 
         icon = QIcon(str(paths.ICON_PATH))
-        self.window = WidgetWindow(icon)
-        self.menu = AppMenu(self.window)
-        self.service = PriceService(
-            build_fetcher(self._providers, self._settings.provider),
-            self._settings.refresh_seconds,
-            initial=self._cache.load(),
+        self.manager = CardManager(
+            specs if specs is not None else CARDS,
+            self.settings.cards,
+            self.look,
+            animate=self.settings.animations,
+            parent=self,
+        )
+        self.settings = self.settings.with_changes(cards=self.manager.card_settings())
+
+        self.panel = PanelWindow(self.look, self.settings)
+        self.panel.setWindowIcon(icon)
+        self.panel.set_pinned(self.settings.pinned)
+        for host in self.manager.hosts:
+            self.panel.add_host(host)
+
+        self.trigger = create_trigger(self.settings.trigger_kind)
+        self.trigger.configure(self.settings, self.look)
+        self.hotkeys = hotkeys or HotkeyManager(self)
+        self.auto_close = PanelAutoClose(
+            zone=self.panel.target_rect,
+            policy=lambda: self.settings,
+            pointer=pointer or SystemPointer(),
             parent=self,
         )
 
-        self.tray: QSystemTrayIcon | None = None
-        if QSystemTrayIcon.isSystemTrayAvailable():
-            self.tray = QSystemTrayIcon(icon, self)
-            self.tray.setToolTip(APP_DISPLAY_NAME)
-            self.tray.setContextMenu(self.menu.menu)
-            self.tray.activated.connect(self._on_tray_activated)
+        self._hover_screen: QScreen | None = None
+        self._hover_timer = QTimer(self)
+        self._hover_timer.setSingleShot(True)
+        self._hover_timer.timeout.connect(self._open_hovered)
+
+        self.tray: TrayIcon | None = None
+        if TrayIcon.is_available():
+            self.tray = TrayIcon(icon, APP_DISPLAY_NAME, self.settings.pinned, self)
             app.setQuitOnLastWindowClosed(False)
-        else:
-            # Tepsi yoksa pencere gizlenirse ulaşılamaz; kapatma gerçekten kapatsın.
-            logger.warning("Sistem tepsisi yok; kapatma düğmesi uygulamadan çıkacak")
-            self.window.allow_close()
 
         self._connect()
-        self._apply_settings_to_window()
-        self.menu.sync(self._settings)
 
     def _connect(self) -> None:
-        s, w, m = self.service, self.window, self.menu
-        s.snapshot_changed.connect(self._on_snapshot)
-        s.state_changed.connect(self._on_state)
-
-        w.featured_clicked.connect(self.set_featured)
-        w.expand_toggled.connect(self.set_expanded)
-        w.context_menu_requested.connect(self._show_context_menu)
-        w.hidden_to_tray.connect(self._on_hidden_to_tray)
-
-        m.toggle_window.connect(self.toggle_window)
-        m.refresh_now.connect(s.refresh)
-        m.featured_selected.connect(self.set_featured)
-        m.visibility_toggled.connect(self.set_type_visible)
-        m.provider_selected.connect(self.set_provider)
-        m.interval_selected.connect(self.set_interval)
-        m.always_on_top_toggled.connect(self.set_always_on_top)
-        m.expanded_toggled.connect(self.set_expanded)
-        m.quit_requested.connect(self.quit)
-
+        self.trigger.hovered.connect(self._on_trigger_hovered)
+        self.trigger.activated.connect(self.open_panel)
+        self.hotkeys.triggered.connect(lambda: self.toggle_panel(self.settings.hotkey_screen))
+        self.panel.pin_clicked.connect(lambda: self.set_pinned(not self.settings.pinned))
+        self.panel.hidden.connect(self._on_panel_hidden)
+        self.auto_close.close_requested.connect(self.close_panel)
+        self.manager.collapsed_changed.connect(self._on_collapsed)
+        self.manager.config_changed.connect(self._on_card_config)
         self._app.aboutToQuit.connect(self._shutdown)
+        if self.tray is not None:
+            self.tray.toggle_requested.connect(lambda: self.toggle_panel("cursor"))
+            self.tray.pin_toggled.connect(self.set_pinned)
+            self.tray.quit_requested.connect(self.quit)
 
     # --- Yaşam döngüsü ------------------------------------------------------
 
     def start(self) -> None:
-        self._place_window()
-        self.window.show()
+        screen = resolve_screen(self.settings.trigger_screen)
+        self.trigger.show_on(screen)
+        if self.settings.hotkey and not self.hotkeys.register(self.settings.hotkey):
+            self._notify(
+                f"'{self.settings.hotkey}' kısayolu kaydedilemedi; başka bir uygulama "
+                "kullanıyor olabilir. Paneli tutamaçtan ya da tepsi ikonundan açabilirsin."
+            )
         if self.tray:
             self.tray.show()
-        self.service.start()
+        if self.settings.pinned:
+            self.open_panel(screen)
 
     @Slot()
     def quit(self) -> None:
-        self.window.allow_close()
         self._app.quit()
 
     @Slot()
     def _shutdown(self) -> None:
-        self._update_settings(window_pos=(self.window.x(), self.window.y()))
+        self.auto_close.stop()
+        self.manager.shutdown()
+        self.hotkeys.unregister()
+        self.trigger.shutdown()
         if self.tray:
             self.tray.hide()
-        # Süren ağ isteği beklenmez: arka plan thread'i süreçle birlikte sonlanır.
-        self.service.stop()
+        self._store.save(self.settings)
+
+    def _notify(self, message: str) -> None:
+        logger.warning(message)
+        if self.tray:
+            self.tray.warn(message)
+
+    # --- Panel açma / kapama ------------------------------------------------
+
+    @Slot(QScreen)
+    def open_panel(self, screen: QScreen) -> None:
+        if self.panel.is_open:
+            return
+        self._hover_timer.stop()
+        self.trigger.hide()
+        self.panel.open_on(screen)
+        self.manager.show_all()
+        self.auto_close.start()
+
+    def close_panel(self, force: bool = False) -> None:
+        """Sabitliyken yalnızca `force` ile (kısayol, tepsi, iğne) kapanır."""
+        if not self.panel.is_open or (self.settings.pinned and not force):
+            return
+        self._hover_timer.stop()
+        self.auto_close.stop()
+        self.panel.close_panel()
+        self.manager.hide_all()
+
+    def toggle_panel(self, screen_spec: str) -> None:
+        if self.panel.is_open:
+            self.close_panel(force=True)
+        else:
+            self.open_panel(resolve_screen(screen_spec))
+
+    @Slot()
+    def _on_panel_hidden(self) -> None:
+        if not self.panel.is_open:
+            self.trigger.show_on(resolve_screen(self.settings.trigger_screen))
+
+    @Slot(QScreen, bool)
+    def _on_trigger_hovered(self, screen: QScreen, entered: bool) -> None:
+        if self.settings.open_mode != "hover":
+            return
+        if entered:
+            self._hover_screen = screen
+            self._hover_timer.start(self.settings.hover_delay_ms)
+        else:
+            self._hover_timer.stop()
+
+    @Slot()
+    def _open_hovered(self) -> None:
+        if self._hover_screen is not None:
+            self.open_panel(self._hover_screen)
 
     # --- Ayar değişiklikleri --------------------------------------------------
 
-    def _update_settings(self, **changes) -> Settings:
-        self._settings = self._settings.with_changes(**changes)
-        self._store.save(self._settings)
-        self.menu.sync(self._settings)
-        return self._settings
+    def _update_settings(self, **changes) -> None:
+        self.settings = self.settings.with_changes(**changes)
+        self._store.save(self.settings)
 
-    @Slot(str)
-    def set_featured(self, type_id: str) -> None:
-        if get_gold_type(type_id) is None:
-            return
-        self._update_settings(featured=type_id)
-        self.window.set_featured(type_id)
-        self._update_tray_tooltip()
+    @Slot(bool)
+    def set_pinned(self, pinned: bool) -> None:
+        self._update_settings(pinned=pinned)
+        self.panel.set_pinned(pinned)
+        if self.tray is not None:
+            self.tray.set_pinned(pinned)
+        if not pinned:
+            self.auto_close.reset()  # sabitlik kalkınca fare takibi sıfırdan başlasın
 
     @Slot(str, bool)
-    def set_type_visible(self, type_id: str, visible: bool) -> None:
-        current = list(self._settings.visible)
-        if visible and type_id not in current:
-            current.append(type_id)
-        elif not visible and type_id in current:
-            current.remove(type_id)
-        settings = self._update_settings(visible=tuple(current))
-        self.window.set_visible_types(settings.visible)
+    def _on_collapsed(self, card_id: str, collapsed: bool) -> None:
+        self.manager.set_collapsed(card_id, collapsed)
+        self._update_settings(cards=self.manager.card_settings())
 
-    @Slot(str)
-    def set_provider(self, provider_id: str) -> None:
-        if provider_id == self._settings.provider:
-            return
-        self._update_settings(provider=provider_id)
-        self.service.set_fetcher(build_fetcher(self._providers, provider_id))
-
-    @Slot(int)
-    def set_interval(self, seconds: int) -> None:
-        self._update_settings(refresh_seconds=seconds)
-        self.service.set_interval(seconds)
-
-    @Slot(bool)
-    def set_always_on_top(self, on_top: bool) -> None:
-        self._update_settings(always_on_top=on_top)
-        self.window.set_always_on_top(on_top)
-
-    @Slot(bool)
-    def set_expanded(self, expanded: bool) -> None:
-        self._update_settings(expanded=expanded)
-        self.window.set_expanded(expanded)
-
-    def _apply_settings_to_window(self) -> None:
-        s = self._settings
-        self.window.set_featured(s.featured)
-        self.window.set_visible_types(s.visible)
-        self.window.set_expanded(s.expanded)
-        if s.always_on_top:
-            self.window.set_always_on_top(True)
-
-    # --- Pencere ve tepsi -----------------------------------------------------
-
-    def _place_window(self) -> None:
-        pos = self._settings.window_pos
-        if pos is not None and QGuiApplication.screenAt(QPoint(*pos)) is not None:
-            self.window.move(*pos)
-            return
-        # Kayıtlı konum yoksa ya da o ekran artık bağlı değilse sağ üst köşe.
-        screen = QGuiApplication.primaryScreen().availableGeometry()
-        self.window.adjustSize()
-        x = screen.right() - self.window.width() - SCREEN_MARGIN
-        self.window.move(x, screen.top() + SCREEN_MARGIN)
-
-    @Slot()
-    def toggle_window(self) -> None:
-        if self.window.isVisible() and not self.window.isMinimized():
-            self.window.hide()
-        else:
-            self.window.bring_to_front()
-
-    @Slot(QSystemTrayIcon.ActivationReason)
-    def _on_tray_activated(self, reason: QSystemTrayIcon.ActivationReason) -> None:
-        if reason in (
-            QSystemTrayIcon.ActivationReason.Trigger,
-            QSystemTrayIcon.ActivationReason.DoubleClick,
-        ):
-            self.toggle_window()
-
-    @Slot(QPoint)
-    def _show_context_menu(self, global_pos: QPoint) -> None:
-        self.menu.menu.popup(global_pos)
-
-    @Slot()
-    def _on_hidden_to_tray(self) -> None:
-        self._update_settings(window_pos=(self.window.x(), self.window.y()))
-        if self.tray and not self._tray_hint_shown:
-            self._tray_hint_shown = True
-            self.tray.showMessage(
-                APP_DISPLAY_NAME,
-                "Uygulama tepside çalışmaya devam ediyor. Çıkmak için sağ tıklayın.",
-                QSystemTrayIcon.MessageIcon.Information,
-                3000,
-            )
-
-    # --- Veri -------------------------------------------------------------------
-
-    @Slot(object)
-    def _on_snapshot(self, snapshot: Snapshot) -> None:
-        self.window.show_snapshot(snapshot)
-        self._update_tray_tooltip()
-        self._cache.save(snapshot)
-
-    @Slot(object)
-    def _on_state(self, state: FeedState) -> None:
-        self.window.set_state(state)
-        self._update_tray_tooltip()
-
-    def _update_tray_tooltip(self) -> None:
-        if not self.tray:
-            return
-        snapshot = self.service.snapshot
-        gold_type = get_gold_type(self._settings.featured)
-        quote = snapshot.get(self._settings.featured) if snapshot else None
-        if gold_type and quote:
-            self.tray.setToolTip(
-                f"{gold_type.name}\n"
-                f"Alış {format_price(quote.buy, gold_type.currency)}  ·  "
-                f"Satış {format_price(quote.sell, gold_type.currency)}"
-            )
-        else:
-            self.tray.setToolTip(APP_DISPLAY_NAME)
-
-
-def _set_windows_app_id() -> None:
-    """Görev çubuğunda python.exe yerine uygulamanın kendi ikonu görünsün."""
-    if sys.platform != "win32":
-        return
-    import ctypes
-
-    with contextlib.suppress(AttributeError, OSError):
-        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("CeyrekTakip.Widget")
+    @Slot(str, object)
+    def _on_card_config(self, card_id: str, config: dict) -> None:
+        self.manager.set_config(card_id, config)
+        self._update_settings(cards=self.manager.card_settings())
 
 
 def main() -> int:
     setup_logging(paths.log_dir())
     logger.info("%s %s başlatılıyor", APP_NAME, __version__)
-    _set_windows_app_id()
+    set_app_user_model_id(APP_USER_MODEL_ID)
 
     app = QApplication(sys.argv)
     app.setApplicationName(APP_NAME)
