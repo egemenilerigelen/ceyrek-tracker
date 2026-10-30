@@ -40,7 +40,7 @@ class CardHost(QWidget):
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(sp(6))
+        layout.setSpacing(0)  # başlık-gövde boşluğu gövdenin içinde: katlanınca atlama olmaz
 
         header = ClickableFrame()
         header.setProperty("role", "card_header")
@@ -61,7 +61,7 @@ class CardHost(QWidget):
 
         self._body = QWidget()
         body_layout = QVBoxLayout(self._body)
-        body_layout.setContentsMargins(0, 0, 0, 0)
+        body_layout.setContentsMargins(0, sp(6), 0, 0)
         body_layout.setSpacing(sp(6))
         self._error = make_label("", "error", wrap=True)
         self._error.hide()
@@ -78,8 +78,8 @@ class CardHost(QWidget):
         layout.addWidget(self._body)
 
         self._anim = QPropertyAnimation(self._body, b"maximumHeight", self)
-        self._anim.setEasingCurve(QEasingCurve.Type.OutCubic)
-        self._anim.setDuration(180)
+        self._anim.setEasingCurve(QEasingCurve.Type.InOutCubic)
+        self._anim.setDuration(220)
         self._anim.finished.connect(self._on_anim_finished)
 
         if error:
@@ -102,9 +102,12 @@ class CardHost(QWidget):
         self._collapsed = collapsed
         self._chevron.setText(CHEVRON_COLLAPSED if collapsed else CHEVRON_EXPANDED)
         if self._animate and self.isVisible():
+            # Animasyon sürerken yön değişirse (art arda tıklama) şu anki yükseklikten devam
+            # edilir; sıfırdan başlatmak kartı bir anda zıplatırdı.
             self._anim.stop()
+            start = self._body.height() if self._body.isVisible() else 0
+            self._body.setMaximumHeight(start)
             self._body.show()
-            start = self._body.height() if collapsed else 0
             end = 0 if collapsed else self._body.sizeHint().height()
             self._anim.setStartValue(start)
             self._anim.setEndValue(end)

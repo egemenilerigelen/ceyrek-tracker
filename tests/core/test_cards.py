@@ -1,4 +1,5 @@
 import pytest
+from PySide6.QtWidgets import QLabel, QVBoxLayout
 
 from ceyrek_tracker.core.card_base import Card, CardContext, CardSpec, guarded
 from ceyrek_tracker.core.card_manager import CardManager, reconcile
@@ -137,3 +138,41 @@ def test_card_config_change_is_persisted_through_manager(qtbot):
     assert changes == [("a", {"x": 1, "city": "Urla"})]
     manager.set_config(*changes[0])
     assert manager.card_settings()[0].config == {"x": 1, "city": "Urla"}
+
+
+class _Tall(Card):
+    """Katlanma animasyonunu gözle görülür kılacak kadar uzun bir kart."""
+
+    def __init__(self, context):
+        super().__init__(context)
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(QLabel("x"))
+        self.setMinimumHeight(200)
+
+
+def test_reversing_collapse_mid_animation_continues_from_current_height(qtbot):
+    # Art arda tıklayınca kart sıfırdan başlayıp zıplamamalı.
+    manager = CardManager([_spec("a", _Tall)], [], LOOK, animate=True)
+    host = manager.hosts[0]
+    qtbot.addWidget(host)
+    host.show()
+    host.set_collapsed(True)
+    qtbot.wait(80)  # animasyonun ortası
+    mid = host._body.height()
+    assert 0 < mid < 200
+    host.set_collapsed(False)  # yön değişti
+    assert host._anim.startValue() == mid
+    assert host._body.maximumHeight() == mid
+
+
+def test_zero_height_body_leaves_no_gap_below_the_header(qtbot):
+    # Animasyonun başında/sonunda gövde görünür ama yüksekliği 0'dır; aradaki boşluk
+    # o anda bir anda belirip kaybolarak kartı zıplatmamalı.
+    manager = CardManager([_spec("a", _Tall)], [], LOOK, animate=False)
+    host = manager.hosts[0]
+    qtbot.addWidget(host)
+    host.show()
+    host._body.setMaximumHeight(0)
+    header_height = host.layout().itemAt(0).widget().sizeHint().height()
+    assert host.sizeHint().height() == header_height
