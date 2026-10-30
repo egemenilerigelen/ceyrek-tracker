@@ -1,43 +1,45 @@
 # Çeyrek Takip
 
-Altın fiyatlarını (çeyrek, gram, yarım, tam, cumhuriyet, ata, reşat, beşli, ons ve
-daha fazlası) masaüstünde gösteren hafif bir Windows widget'ı. Çerçevesiz, sürüklenebilir
-ve sistem tepsisinde çalışır.
+Ekranın sağ kenarından kayarak açılan, modüler bir Windows durum paneli. Her bilgi
+(hava durumu, sistem, piyasa, müzik...) bağımsız bir **kart**tır; kartlar açılıp
+kapanabilir, katlanabilir ve sıralanabilir.
 
 <p>
-  <img src="docs/widget.png" alt="Kompakt görünüm" width="340">
-  &nbsp;
-  <img src="docs/widget-liste.png" alt="Tüm altınlar listesi açık" width="340">
+  <img src="docs/panel.png" alt="Panel: üst bilgi satırı ve hava durumu kartı" width="340">
 </p>
 
-## Özellikler
+> Proje geliştirme aşamasında. Şu an panel iskeleti, tema katmanı, üst bilgi satırı ve
+> **hava durumu** kartı çalışıyor. Sistem, müzik, piyasa (altın dahil), takvim, pil/ses
+> ve pano kartları sırayla eklenecek.
 
-- **Öne çıkan altın:** Seçtiğin türün alış/satış fiyatı ve günlük değişimi büyük puntoyla görünür.
-- **Tüm altınlar listesi:** `▾` düğmesiyle açılır. Bir satıra tıklayınca o tür öne çıkar.
-- **İki veri kaynağı ve otomatik yedekleme:** Seçili kaynak yanıt vermezse diğeri denenir.
-- **Dürüst durum göstergesi:** `CANLI` (son istek başarılı), `GECİKMELİ` (elde güncel olmayan veri var),
-  `BAĞLANTI YOK`. Alt satırda kaynak, verinin kaynaktaki zamanı ve son kontrol saati yer alır.
-- **Fiyat yönü renkleri:** Bir önceki güncellemeye göre artış yeşil, düşüş kırmızı gösterilir.
-- **Kalıcı ayarlar:** Kaynak, yenileme aralığı, öne çıkan tür, listede görünen türler,
-  ekrana sabitleme ve pencere konumu saklanır.
-- **Hızlı açılış:** Son alınan veri saklanır; uygulama açılır açılmaz `GECİKMELİ` etiketiyle gösterilir.
-- **Tek kopya:** Uygulama ikinci kez açılmaya çalışılırsa uyarı verir.
-- Hatalarda kademeli yeniden deneme (10 sn → 20 sn → 40 sn … en fazla yenileme aralığı kadar).
+## Kullanım
 
-Tüm ayarlara widget'a **sağ tıklayarak** ya da **tepsi ikonuna sağ tıklayarak** ulaşılır.
+- **Açmak:** sağ kenardaki ince tutamacın üzerine gel (varsayılan 200 ms bekler) ya da
+  tıkla. `Win+Alt+P` kısayolu ve tepsi ikonu da paneli açıp kapatır.
+- **Kapatmak:** panelin dışına tıkla ya da fareyi panelden 3 sn uzak tut. Kısayol ve tepsi
+  ikonu her zaman kapatır.
+- **Sabitlemek:** üst satırdaki iğne düğmesi paneli açık tutar; dışarı tıklama ve fare
+  ayrılması kapatmaz. Durum hatırlanır.
+- **Katlamak:** kart başlığına tıkla; durum hatırlanır.
 
-## Veri kaynakları
+## Ayarlar
 
-| Kaynak | Güncelleme | Günlük değişim | Not |
-| --- | --- | --- | --- |
-| [Truncgil Finans](https://finans.truncgil.com/) `v3` (varsayılan) | ~15 dakikada bir | Var | Ücretsiz, anahtarsız geliştirici API'si |
-| Altınkaynak | Saniyeler içinde | Yok | Sitesinin kullandığı açık JSON; resmi API değil |
+Tek dosya: `%APPDATA%\CeyrekTakip\settings.json` (uygulama kapalıyken düzenle; hatalı
+değerler sessizce varsayılana döner). Ayarlar ekranı sonraki aşamada gelecek.
 
-Truncgil'in `today.json` ve `v4` uç noktaları yanıtı sık sık yarıda kesiyor; bu yüzden `v3`
-kullanılıyor ve bozuk yanıtlar otomatik olarak yeniden isteniyor.
+| Alan | Anlamı |
+| --- | --- |
+| `open_mode` | `hover` (üzerine gelince) ya da `click` (yalnızca tıklayınca) |
+| `hover_delay_ms`, `leave_close_seconds` | Açılış gecikmesi, fare ayrılınca kapanma süresi (0 = kapalı) |
+| `hotkey`, `hotkey_screen` | Kısayol (boş = yok) ve hangi ekranda açılacağı (`cursor` / `primary`) |
+| `trigger_screen` | Tutamacın ekranı: `primary` ya da ekran adı (ör. `\\.\DISPLAY2`) |
+| `handle_thickness`, `handle_length`, `handle_position` | Tutamacın boyutu ve dikey konumu (0 üst, 1 alt) |
+| `theme`, `accent`, `density`, `font_scale` | `dark`/`light`, `#rrggbb` vurgu, `compact`/`normal`/`relaxed`, yazı ölçeği |
+| `blur`, `glass_opacity`, `animations`, `animation_ms` | Cam efekti ve animasyonlar |
+| `cards` | Her kart için `enabled`, `collapsed` ve `config` (ör. hava için `{"city": "Ankara"}`) |
 
-Varsayılan yenileme aralığı **1 dakika**dır (menüden 30 sn ile 15 dk arasında seçilebilir).
-Kaynakların kendi güncelleme hızı bundan yavaşsa, ekranda verinin kaynaktaki zamanı ayrıca gösterilir.
+`Win+Alt+W` gibi bazı kısayollar başka uygulamalarca tutulmuş olabilir; kayıt başarısız
+olursa tepsiden uyarı gelir ve `hotkey` değiştirilebilir.
 
 ## Kurulum ve çalıştırma
 
@@ -59,42 +61,51 @@ python -m ruff format .      # biçimlendirme
 python -m PyInstaller --noconfirm CeyrekTakip.spec   # dist\CeyrekTakip.exe
 ```
 
-GitHub Actions her push ve PR'da lint ve testleri çalıştırır, ardından exe'yi derleyip
-artifact olarak yükler.
-
 ## Mimari
+
+Bağımlılık yalnızca aşağıya doğru akar; kurallar `tests/test_architecture.py` ile her test
+çalışmasında denetlenir.
+
+```text
+app  ->  cards/<özellik>  ->  core  ->  infra, theme
+```
 
 ```text
 src/ceyrek_tracker/
-├── app.py               # Giriş noktası + AppController (bileşenleri bağlar)
-├── domain/              # Saf Python: katalog, veri modelleri, Türkçe sayı biçimi
-├── providers/           # Truncgil, Altınkaynak ve kaynaklar arası yedekleme zinciri
-├── services/            # PriceService: zamanlayıcı, yeniden deneme, durum (Qt)
-├── ui/                  # Widget penceresi, bileşenler, menü, tema
-├── settings.py          # Ayar modeli + doğrulama
-├── storage.py           # Atomik JSON yazma, son veri önbelleği
-├── paths.py             # %APPDATA%\CeyrekTakip altındaki dosyalar
-└── logging_setup.py     # Dönen log dosyası
+├── app.py            # birleştirme noktası: AppController + giriş noktası (her şeyi bilen tek yer)
+├── core/             # panel iskeleti; hiçbir karta bağımlı değil
+│   ├── settings.py       # ayarlar (settings.json) ve görünüm üretimi
+│   ├── panel_window.py   # çerçevesiz yüzen panel, kayma animasyonu, cam efekti
+│   ├── card_base.py · card_host.py · card_manager.py   # kart arayüzü, çerçevesi, yaşam döngüsü
+│   ├── auto_close.py     # dışarı tıklama / fare uzaklaşması kararı (fare ve saat enjekte edilir)
+│   ├── tray.py · header.py · polling.py · widgets.py · screens.py · turkish.py
+│   ├── trigger/          # tetikleyici arayüzü + tutamaç (kolay değişir)
+│   └── platform/         # Windows'a özgü: glass, hotkey, single_instance, mouse, appid
+├── cards/            # her kart kendi paketi; kartlar birbirini bilmez
+│   ├── __init__.py       # kart kayıt defteri (CARDS)
+│   ├── weather/          # card · api · cache · places · icon · backdrop
+│   └── finance/          # altın/döviz verisi: models · providers · service · cache (kart arayüzü sonra)
+├── theme/            # tüm renk, boyut, yazı tipi: tokens.py (tek yer) + stil sayfası
+└── infra/            # kaynaktan bağımsız altyapı: paths · storage · http · logging_setup
 ```
 
-- **Thread modeli:** Zamanlayıcı ana thread'de çalışır. Ağ isteği, `moveToThread` ile ayrı bir
-  QThread'e taşınmış worker'da yapılır, bu yüzden arayüz hiç donmaz. Thread'ler arasında yalnızca
-  sinyaller ve değişmez nesneler dolaşır.
-- **Bağımlılık yönü:** `ui` → `services` → `providers` → `domain`. `domain` Qt'ye bağlı değildir
-  ve tamamen birim testlerle kapsanır.
-- **Yeni kaynak eklemek:** `providers/` altına `fetch() -> Snapshot` yöntemi olan bir sınıf yaz,
-  katalog id'lerine eşle, `providers/__init__.py` içindeki `PROVIDER_CHOICES` ve
-  `create_providers` listelerine ekle.
-
-## İkon
-
-`src/ceyrek_tracker/assets/icon.ico`, `tools/make_icon.py` betiğinin çıktısıdır. İkonu değiştirmek
-için betiği düzenleyip `python tools/make_icon.py` ile yeniden üretin.
+- **Yeni kart eklemek:** `cards/<ad>/` paketi aç, `Card` türeten sınıfı yaz, `__init__.py`
+  içinde bir `SPEC` (`CardSpec`) dışa aktar ve `cards/__init__.py` içindeki `CARDS` listesine
+  ekle. Kartın önbellek dosyası ve verisi kendi paketinde kalır; `core` ve `infra`
+  dışında hiçbir şeye bağımlı olamaz (başka karta bile).
+- **Hata dayanıklılığı:** Bir kart kurulurken, güncellenirken ya da sinyal işlerken hata
+  verirse yalnızca o kartta mesaj görünür; panel ve diğer kartlar etkilenmez.
+- **Test edilebilirlik:** Fare, saat, önbellek ve HTTP gibi dış bağımlılıklar kurucudan
+  (constructor) verilir; testler gerçek sisteme dokunmaz.
+- **Performans:** Panel kapalıyken kartların zamanlayıcıları durur (`on_hide`), fare
+  izleme zamanlayıcısı yalnızca panel açıkken çalışır. Boşta CPU %0 civarındadır.
+- **Görünümü değiştirmek:** `theme/tokens.py` içindeki `DARK` / `LIGHT` ön ayarları ve
+  `Metrics` (yoğunluk, yazı ölçeği) tek yerdir; kartlarda sabit renk yoktur.
 
 ## Kullanıcı verisi
 
 `%APPDATA%\CeyrekTakip\` klasöründe tutulur:
 
 - `settings.json`: ayarlar
-- `last_snapshot.json`: son alınan fiyatlar
+- `weather.json`: son hava durumu yanıtı (internet yokken eski veriyi göstermek için)
 - `logs\app.log`: loglar (sorun bildirirken bu dosyayı ekleyin)

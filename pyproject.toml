@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ceyrek-tracker"
 version = "0.1.0"
-description = "Altın fiyatlarını masaüstünde gösteren hafif Windows widget'ı"
+description = "Ekranın sağ kenarından açılan, modüler Windows durum paneli"
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{ name = "Egemenilrgln", email = "egeilrgln@gmail.com" }]
