@@ -12,9 +12,9 @@ from typing import Any
 
 import requests
 
-from ceyrek_tracker.domain.formatting import parse_tr_number
-from ceyrek_tracker.domain.models import Quote, Snapshot
-from ceyrek_tracker.providers.base import ProviderError, create_session, get_json
+from ceyrek_tracker.cards.finance.formatting import parse_tr_number
+from ceyrek_tracker.cards.finance.models import Quote, Snapshot
+from ceyrek_tracker.infra.http import ProviderError, create_session, get_json
 
 logger = logging.getLogger(__name__)
 

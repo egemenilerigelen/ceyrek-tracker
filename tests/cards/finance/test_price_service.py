@@ -4,9 +4,9 @@ from datetime import datetime, timedelta
 
 import pytest
 
-from ceyrek_tracker.domain.models import FeedStatus, Quote, Snapshot
-from ceyrek_tracker.providers import AllProvidersFailed
-from ceyrek_tracker.services.price_service import PriceService, is_stale, retry_delay
+from ceyrek_tracker.cards.finance.models import FeedStatus, Quote, Snapshot
+from ceyrek_tracker.cards.finance.providers import AllProvidersFailed
+from ceyrek_tracker.cards.finance.service import PriceService, is_stale, retry_delay
 
 
 def _snapshot(buy: float = 100.0) -> Snapshot:

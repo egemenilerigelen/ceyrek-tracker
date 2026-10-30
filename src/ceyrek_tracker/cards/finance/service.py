@@ -23,27 +23,18 @@ from typing import Protocol
 
 from PySide6.QtCore import QObject, Qt, QTimer, Signal, Slot
 
-from ceyrek_tracker.domain.models import FeedState, FeedStatus, Snapshot
-from ceyrek_tracker.providers import AllProvidersFailed
+from ceyrek_tracker.cards.finance.models import FeedState, FeedStatus, Snapshot
+from ceyrek_tracker.cards.finance.providers import AllProvidersFailed
+from ceyrek_tracker.core.polling import retry_delay
 
 logger = logging.getLogger(__name__)
 
-# Hata sonrası ilk yeniden deneme gecikmesi (saniye); her hatada ikiye katlanır.
-RETRY_BASE_SECONDS = 10
 # Son başarılı veri bu kadar yenileme süresinden eskiyse "gecikmeli" sayılır.
 STALE_AFTER_INTERVALS = 3
 
 
 class Fetcher(Protocol):
     def fetch(self) -> Snapshot: ...
-
-
-def retry_delay(consecutive_failures: int, interval: int) -> int:
-    """10, 20, 40 ... saniye; normal yenileme aralığını hiçbir zaman aşmaz."""
-    if consecutive_failures <= 0:
-        return interval
-    delay = RETRY_BASE_SECONDS * 2 ** (consecutive_failures - 1)
-    return min(delay, interval)
 
 
 def is_stale(last_success: datetime | None, interval: int, now: datetime) -> bool:

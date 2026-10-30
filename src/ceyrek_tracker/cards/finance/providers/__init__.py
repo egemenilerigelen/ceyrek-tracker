@@ -5,10 +5,11 @@ from __future__ import annotations
 import logging
 from collections.abc import Sequence
 
-from ceyrek_tracker.domain.models import Snapshot
-from ceyrek_tracker.providers.altinkaynak import AltinkaynakProvider
-from ceyrek_tracker.providers.base import PriceProvider, ProviderError
-from ceyrek_tracker.providers.truncgil import TruncgilProvider
+from ceyrek_tracker.cards.finance.models import Snapshot
+from ceyrek_tracker.cards.finance.providers.altinkaynak import AltinkaynakProvider
+from ceyrek_tracker.cards.finance.providers.base import PriceProvider
+from ceyrek_tracker.cards.finance.providers.truncgil import TruncgilProvider
+from ceyrek_tracker.infra.http import ProviderError
 
 logger = logging.getLogger(__name__)
 

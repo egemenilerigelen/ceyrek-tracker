@@ -1,6 +1,6 @@
 import pytest
 
-from ceyrek_tracker.domain.formatting import (
+from ceyrek_tracker.cards.finance.formatting import (
     format_change,
     format_price,
     format_tr_number,
