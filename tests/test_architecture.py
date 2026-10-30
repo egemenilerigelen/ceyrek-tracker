@@ -92,7 +92,7 @@ def test_layering_rules_hold():
     ("module", "layer"),
     [
         ("ceyrek_tracker.core.panel_window", "core"),
-        ("ceyrek_tracker.core.platform.glass", "core.platform"),
+        ("ceyrek_tracker.core.platform.hotkey", "core.platform"),
         ("ceyrek_tracker.cards.weather.card", "cards.weather"),
         ("ceyrek_tracker.cards", "cards"),
         ("ceyrek_tracker.infra.http", "infra"),

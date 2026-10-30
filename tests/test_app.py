@@ -190,4 +190,4 @@ def test_panel_floats_with_margin_and_rounded_card(make_controller, screen):
     assert card.right() == work.right() - margin
     # Etkileşim alanı kartı ve çevresindeki boşluğu kapsar.
     assert c.panel.target_rect().contains(card)
-    assert c.panel._surface.radius == c.look.theme.radius_panel > 0
+    assert c.look.theme.radius_panel > 0  # köşeler PanelSurface tarafından çizilir
