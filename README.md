@@ -9,8 +9,8 @@ kapanabilir, katlanabilir ve sıralanabilir.
 </p>
 
 > Proje geliştirme aşamasında. Şu an panel iskeleti, tema katmanı, üst bilgi satırı ve
-> **hava durumu** kartı çalışıyor. Sistem, müzik, piyasa (altın dahil), takvim, pil/ses
-> ve pano kartları sırayla eklenecek.
+> **hava durumu** ve **finans** (döviz, altın, gümüş) kartları çalışıyor. Sistem, müzik,
+> takvim, pil/ses ve pano kartları sırayla eklenecek.
 
 ## Kullanım
 
@@ -36,10 +36,23 @@ değerler sessizce varsayılana döner). Ayarlar ekranı sonraki aşamada gelece
 | `handle_thickness`, `handle_length`, `handle_position` | Tutamacın boyutu ve dikey konumu (0 üst, 1 alt) |
 | `theme`, `accent`, `density`, `font_scale` | `dark`/`light`, `#rrggbb` vurgu, `compact`/`normal`/`relaxed`, yazı ölçeği |
 | `glass_opacity`, `animations`, `animation_ms` | Panel zemininin opaklığı (0,3–1; varsayılan 0,92, düşürdükçe arkadaki pencereler daha çok görünür) ve animasyonlar |
-| `cards` | Her kart için `enabled`, `collapsed` ve `config` (ör. hava için `{"city": "Ankara"}`) |
+| `cards` | Her kart için `enabled`, `collapsed` ve `config` (ör. hava için `{"city": "Ankara"}`, finans için `{"items": ["usd", "eur", "ceyrek"]}`) |
 
 `Win+Alt+W` gibi bazı kısayollar başka uygulamalarca tutulmuş olabilir; kayıt başarısız
 olursa tepsiden uyarı gelir ve `hotkey` değiştirilebilir.
+
+### Finans kartı
+
+Dolar, euro, sterlin, gram altın, çeyrek altın, gümüş ve ons satış fiyatlarını (ve
+günlük değişimi) yalnızca yazı olarak gösterir. Veri, panel açıkken dakikada bir
+Truncgil'den çekilir; ulaşılamazsa Altınkaynak denenir. Başlıktaki bilgi kaynağı ve verinin
+saatini gösterir; güncelleme başarısız olursa "eski veri" notu çıkar.
+
+Gösterilecek satırlar `cards` içindeki `finance` ayarında `items` ile seçilir (sıra
+korunur): `usd`, `eur`, `gbp`, `chf`, `gram`, `gram_has`, `ceyrek`, `yarim`, `tam`,
+`cumhuriyet`, `ata`, `resat`, `hamit`, `ikibucuk`, `gremse`, `besli`, `ayar14`, `ayar18`,
+`bilezik22`, `ons`, `gumus`. Altınkaynak'ta karşılığı olmayan satırlar (ör. `cumhuriyet`)
+o kaynağa düşülünce `—` görünür.
 
 ## Kurulum ve çalıştırma
 
@@ -85,7 +98,7 @@ src/ceyrek_tracker/
 ├── cards/            # her kart kendi paketi; kartlar birbirini bilmez
 │   ├── __init__.py       # kart kayıt defteri (CARDS)
 │   ├── weather/          # card · api · cache · places · icon · backdrop
-│   └── finance/          # altın/döviz verisi: models · providers · service · cache (kart arayüzü sonra)
+│   └── finance/          # card · catalog · models · providers · service · cache · formatting
 ├── theme/            # tüm renk, boyut, yazı tipi: tokens.py (tek yer) + stil sayfası
 └── infra/            # kaynaktan bağımsız altyapı: paths · storage · http · logging_setup
 ```
@@ -109,4 +122,5 @@ src/ceyrek_tracker/
 
 - `settings.json`: ayarlar
 - `weather.json`: son hava durumu yanıtı (internet yokken eski veriyi göstermek için)
+- `last_snapshot.json`: son finans fiyatları (aynı amaçla)
 - `logs\app.log`: loglar (sorun bildirirken bu dosyayı ekleyin)
