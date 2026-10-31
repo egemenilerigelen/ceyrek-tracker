@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from ceyrek_tracker.cards import weather
+from ceyrek_tracker.cards import finance, weather
 from ceyrek_tracker.core.card_base import CardSpec
 
-CARDS: tuple[CardSpec, ...] = (weather.SPEC,)
+CARDS: tuple[CardSpec, ...] = (weather.SPEC, finance.SPEC)
