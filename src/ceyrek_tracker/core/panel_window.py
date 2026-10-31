@@ -26,7 +26,7 @@ from ceyrek_tracker.core.card_host import CardHost
 from ceyrek_tracker.core.header import HeaderBar
 from ceyrek_tracker.core.panel_surface import PanelSurface
 from ceyrek_tracker.core.settings import Settings
-from ceyrek_tracker.core.widgets import AutoHideScrollArea, make_frame
+from ceyrek_tracker.core.widgets import AutoHideScrollArea
 from ceyrek_tracker.theme import Look
 
 PANEL_MARGIN = 8  # kartın ekran kenarlarından uzaklığı (mantıksal px, yoğunlukla ölçeklenir)
@@ -118,8 +118,6 @@ class PanelWindow(QWidget):
         )
 
     def add_host(self, host: CardHost) -> None:
-        if self._column.count() > 1:  # son eleman esneme boşluğu
-            self._column.insertWidget(self._column.count() - 1, make_frame("divider"))
         self._column.insertWidget(self._column.count() - 1, host)
 
     def set_pinned(self, pinned: bool) -> None:
