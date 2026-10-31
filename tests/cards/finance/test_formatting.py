@@ -39,12 +39,15 @@ def test_format_tr_number():
 
 
 def test_format_price_currency():
-    assert format_price(10392.68) == "10.392,68"
-    assert format_price(4024.95, "USD") == "$4.024,95"
+    assert format_price(49.9589) == "49,96 ₺"
+    assert format_price(10274.06) == "10.274 ₺"  # binlik ve üstünde kuruş yazılmaz
+    assert format_price(4024.95, "USD") == "$4.025"
+    assert format_price(78.92, "USD") == "$78,92"
 
 
 def test_format_change():
-    assert format_change(0.67) == "▲ %0,67"
-    assert format_change(-1.04) == "▼ %1,04"
-    assert format_change(0.0) == "▬ %0,00"
+    assert format_change(0.67) == "%0,67"
+    assert format_change(-1.04) == "%-1,04"
+    assert format_change(0.0) == "%0,00"
+    assert format_change(-0.001) == "%0,00"
     assert format_change(None) == "—"

@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-_CURRENCY_SYMBOLS = {"TRY": "", "USD": "$"}
+# para birimi -> (önek, sonek)
+_CURRENCY_AFFIXES = {"TRY": ("", " ₺"), "USD": ("$", "")}
 
 
 def parse_tr_number(raw: str | float | int) -> float:
@@ -25,14 +26,14 @@ def format_tr_number(value: float, decimals: int = 2) -> str:
 
 
 def format_price(value: float, currency: str = "TRY") -> str:
-    return f"{_CURRENCY_SYMBOLS.get(currency, '')}{format_tr_number(value)}"
+    """49.96 -> "49,96 ₺"; binlik ve üstünde kuruş yazılmaz: 10274.06 -> "10.274 ₺"."""
+    prefix, suffix = _CURRENCY_AFFIXES.get(currency, ("", ""))
+    decimals = 0 if abs(value) >= 1000 else 2
+    return f"{prefix}{format_tr_number(value, decimals)}{suffix}"
 
 
 def format_change(change_pct: float | None) -> str:
+    """0.07 -> "%0,07", -1.04 -> "%-1,04"; yön rengi arayüzde verilir."""
     if change_pct is None:
         return "—"
-    if change_pct > 0:
-        return f"▲ %{format_tr_number(change_pct)}"
-    if change_pct < 0:
-        return f"▼ %{format_tr_number(abs(change_pct))}"
-    return f"▬ %{format_tr_number(0)}"
+    return f"%{format_tr_number(round(change_pct, 2) + 0.0)}"  # "-0,00" çıkmasın
