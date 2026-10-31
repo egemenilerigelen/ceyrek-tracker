@@ -1,8 +1,10 @@
+import json
 from datetime import datetime
 
 import pytest
+import requests
 
-from ceyrek_tracker.cards.finance.catalog import GOLD_TYPES
+from ceyrek_tracker.cards.finance.catalog import INSTRUMENTS
 from ceyrek_tracker.cards.finance.models import Snapshot
 from ceyrek_tracker.cards.finance.providers import (
     AllProvidersFailed,
@@ -18,7 +20,7 @@ from conftest import load_fixture
 class TestTruncgil:
     def test_parses_all_catalog_types(self, fetched_at):
         snapshot = truncgil.parse(load_fixture("truncgil_v3.json"), fetched_at)
-        assert set(snapshot.quotes) == {g.id for g in GOLD_TYPES}
+        assert set(snapshot.quotes) == {g.id for g in INSTRUMENTS}
         ceyrek = snapshot.get("ceyrek")
         assert ceyrek.buy == pytest.approx(10392.68)
         assert ceyrek.sell == pytest.approx(10632.48)
@@ -54,6 +56,49 @@ class TestAltinkaynak:
     def test_rejects_unexpected_shape(self, fetched_at):
         with pytest.raises(ProviderError):
             altinkaynak.parse({"Kod": "C"}, fetched_at)
+
+
+class _Session:
+    """Adrese göre hazır yanıt döndüren sahte HTTP oturumu."""
+
+    def __init__(self, responses):
+        self.responses = responses
+
+    def get(self, url, timeout):
+        result = self.responses[url]
+        if isinstance(result, Exception):
+            raise result
+
+        class _Response:
+            content = json.dumps(result).encode()
+
+            def raise_for_status(self):
+                pass
+
+        return _Response()
+
+
+class TestAltinkaynakFetch:
+    def _gold(self):
+        return [i for i in load_fixture("altinkaynak.json") if i["Kod"] not in ("USD", "EUR")]
+
+    def test_merges_gold_and_currency_lists(self):
+        currency = [i for i in load_fixture("altinkaynak.json") if i["Kod"] in ("USD", "EUR")]
+        session = _Session({altinkaynak.GOLD_URL: self._gold(), altinkaynak.CURRENCY_URL: currency})
+        snapshot = altinkaynak.AltinkaynakProvider(session).fetch()
+        assert snapshot.get("usd").sell == pytest.approx(49.968)
+        assert snapshot.get("ceyrek") is not None
+
+    def test_gold_survives_currency_outage(self):
+        session = _Session(
+            {
+                altinkaynak.GOLD_URL: self._gold(),
+                altinkaynak.CURRENCY_URL: requests.ConnectionError(),
+            }
+        )
+        snapshot = altinkaynak.AltinkaynakProvider(session).fetch()
+        assert snapshot.get("usd") is None
+        assert snapshot.get("ceyrek") is not None
 
 
 class _StubProvider:

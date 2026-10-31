@@ -22,6 +22,10 @@ URL = "https://finans.truncgil.com/v3/today.json"
 
 # katalog id -> Truncgil anahtarı
 KEY_MAP: dict[str, str] = {
+    "usd": "USD",
+    "eur": "EUR",
+    "gbp": "GBP",
+    "chf": "CHF",
     "gram": "gram-altin",
     "gram_has": "gram-has-altin",
     "ceyrek": "ceyrek-altin",
@@ -38,6 +42,7 @@ KEY_MAP: dict[str, str] = {
     "ayar18": "18-ayar-altin",
     "bilezik22": "22-ayar-bilezik",
     "ons": "ons",
+    "gumus": "gumus",
 }
 
 
@@ -62,7 +67,7 @@ def parse(payload: Any, fetched_at: datetime) -> Snapshot:
             logger.warning("Truncgil '%s' ayrıştırılamadı: %r", key, exc)
 
     if not quotes:
-        raise ProviderError("Truncgil: yanıtta altın verisi yok")
+        raise ProviderError("Truncgil: yanıtta fiyat verisi yok")
 
     source_time = None
     if raw_time := payload.get("Update_Date"):

@@ -422,5 +422,37 @@
   "Aciklama": "ONS",
   "GuncellenmeZamani": "29.10.2026 16:54:00",
   "IsMobile": true
+ },
+ {
+  "Alis": "49,728",
+  "Satis": "49,968",
+  "Kod": "USD",
+  "Aciklama": "Amerikan Doları",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "55,329",
+  "Satis": "55,763",
+  "Kod": "EUR",
+  "Aciklama": "Avrupa Para Birimi",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "59,683",
+  "Satis": "60,559",
+  "Kod": "CHF",
+  "Aciklama": "İsviçre Frangı",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
+ },
+ {
+  "Alis": "66,220",
+  "Satis": "67,101",
+  "Kod": "GBP",
+  "Aciklama": "İngiliz Sterlini",
+  "GuncellenmeZamani": "29.10.2026 16:54:19",
+  "IsMobile": true
  }
 ]

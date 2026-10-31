@@ -12,6 +12,18 @@
   "Selling": "55,5478",
   "Change": "%-0,05"
  },
+ "GBP": {
+  "Buying": "66,9473",
+  "Type": "Currency",
+  "Selling": "67,0067",
+  "Change": "%0,11"
+ },
+ "CHF": {
+  "Buying": "60,5159",
+  "Type": "Currency",
+  "Selling": "60,5856",
+  "Change": "%0,02"
+ },
  "ons": {
   "Buying": "$4.021,23",
   "Type": "Gold",
