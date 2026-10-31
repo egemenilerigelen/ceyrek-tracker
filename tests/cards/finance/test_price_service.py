@@ -148,3 +148,34 @@ def test_set_fetcher_requests_new_data_even_while_request_in_flight(qtbot, servi
     assert fast.started.wait(timeout=3)
     slow.release.set()
     fast.release.set()
+
+
+class _HangsOnce:
+    """İlk istek takılır (süre giderken panel kapanır), sonrakiler normal döner."""
+
+    def __init__(self):
+        self.first = _BlockingFetcher("stuck")
+        self.calls = 0
+
+    def fetch(self):
+        self.calls += 1
+        if self.calls == 1:
+            return self.first.fetch()
+        return _snapshot()
+
+
+def test_service_can_restart_after_stop_during_request(qtbot, service_factory):
+    # Panel kapanıp açılırken süren istek yarıda kalsa da servis yeniden çalışmalı.
+    fetcher = _HangsOnce()
+    service = service_factory(fetcher)
+    service.start()
+    assert fetcher.first.started.wait(timeout=3)
+    service.stop()
+
+    service.start()
+    qtbot.waitUntil(lambda: service.snapshot is not None, timeout=3000)
+    assert service.state.status is FeedStatus.LIVE
+
+    fetcher.first.release.set()  # eski istek şimdi bitiyor; sonucu yok sayılmalı
+    qtbot.wait(150)
+    assert service.snapshot.source_id == "t"

@@ -107,6 +107,9 @@ class PriceService(QObject):
     def stop(self) -> None:
         """Servisi durdurur. Süren istek beklenmez; sonucu yok sayılır."""
         self._running = False
+        # Süren istek artık geçersiz; yoksa `start()` sonrası yeni istek hiç başlamazdı.
+        self._generation += 1
+        self._in_flight = False
         self._timer.stop()
         self._stale_check.stop()
 
