@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any
 
 from PySide6.QtCore import Qt
@@ -20,6 +20,8 @@ from ceyrek_tracker.core.widgets import make_label, repolish
 from ceyrek_tracker.theme import Look
 
 REFRESH_SECONDS = 60
+# Veri bundan eskiyse başlıkta saati gösterilir (hafta sonu, kapalı piyasa, bağlantı sorunu).
+OLD_AFTER = timedelta(minutes=15)
 EMPTY = "—"
 
 
@@ -45,6 +47,23 @@ def change_role(change_pct: float | None) -> str:
 def stamp(moment: datetime, now: datetime) -> str:
     """Bugünün saati 'HH:MM', daha eskisi (hafta sonu, kapalı piyasa) tarihle birlikte."""
     return f"{moment:%H:%M}" if moment.date() == now.date() else f"{moment:%d.%m %H:%M}"
+
+
+def info_text(snapshot: Snapshot, stale: bool, now: datetime) -> str:
+    """Başlıktaki kısa bilgi. Normalde boş kalır: taze veride saat ve kaynak adı kalabalık yapar.
+
+    Yalnızca işe yaradığında yazar: yedek kaynak devredeyse adı (fiyatlar kaynağa göre
+    farklı), veri eskiyse ya da güncelleme başarısızsa saati.
+    """
+    parts = []
+    if snapshot.source_id != DEFAULT_PROVIDER:
+        parts.append(snapshot.source_name)
+    moment = snapshot.source_time or snapshot.fetched_at
+    if stale:
+        parts.append(f"eski veri {stamp(moment, now)}")
+    elif now - moment > OLD_AFTER:
+        parts.append(stamp(moment, now))
+    return " · ".join(parts)
 
 
 class FinanceCard(Card):
@@ -129,12 +148,8 @@ class FinanceCard(Card):
             self._publish_info()
 
     def _publish_info(self) -> None:
-        snapshot = self._snapshot
-        if snapshot is None:
-            return
-        when = stamp(snapshot.source_time or snapshot.fetched_at, datetime.now())
-        note = f"eski veri {when}" if self._stale else when
-        self.set_info(f"{snapshot.source_name} · {note}")
+        if self._snapshot is not None:
+            self.set_info(info_text(self._snapshot, self._stale, datetime.now()))
 
     def _render(self, snapshot: Snapshot) -> None:
         for type_id, (sell, change) in self._rows.items():

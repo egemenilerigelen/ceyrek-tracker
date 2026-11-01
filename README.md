@@ -45,8 +45,10 @@ olursa tepsiden uyarı gelir ve `hotkey` değiştirilebilir.
 
 Dolar, euro, sterlin, gram altın, çeyrek altın, gümüş ve ons satış fiyatlarını (ve
 günlük değişimi) yalnızca yazı olarak gösterir. Veri, panel açıkken dakikada bir
-Truncgil'den çekilir; ulaşılamazsa Altınkaynak denenir. Başlıktaki bilgi kaynağı ve verinin
-saatini gösterir; güncelleme başarısız olursa "eski veri" notu çıkar.
+Truncgil'den çekilir; ulaşılamazsa Altınkaynak denenir. Başlıktaki bilgi normalde boştur;
+yalnızca yedek kaynak devredeyse kaynağın adı (fiyatlar kaynağa göre değişir), veri 15
+dakikadan eskiyse (hafta sonu, kapalı piyasa) saati, güncelleme başarısızsa "eski veri"
+notu yazar.
 
 Gösterilecek satırlar `cards` içindeki `finance` ayarında `items` ile seçilir (sıra
 korunur): `usd`, `eur`, `gbp`, `chf`, `gram`, `gram_has`, `ceyrek`, `yarim`, `tam`,

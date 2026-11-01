@@ -3,7 +3,7 @@ from datetime import datetime
 import pytest
 
 from ceyrek_tracker.cards import CARDS, finance
-from ceyrek_tracker.cards.finance.card import change_role, parse_items, stamp
+from ceyrek_tracker.cards.finance.card import change_role, info_text, parse_items, stamp
 from ceyrek_tracker.cards.finance.catalog import DEFAULT_ITEMS
 from ceyrek_tracker.cards.finance.models import Quote, Snapshot
 from ceyrek_tracker.cards.finance.providers import AllProvidersFailed, truncgil
@@ -89,6 +89,32 @@ def test_stamp_shows_date_only_when_not_today():
     assert stamp(datetime(2026, 10, 30, 16, 45), now) == "30.10 16:45"
 
 
+def _snap(source_id, moment):
+    return Snapshot(source_id, source_id.title(), {}, moment, moment)
+
+
+def test_info_is_empty_for_fresh_data_from_default_source():
+    now = datetime(2026, 11, 1, 12, 0)
+    assert info_text(_snap("truncgil", datetime(2026, 11, 1, 11, 52)), False, now) == ""
+
+
+def test_info_shows_time_when_data_is_old_or_stale():
+    now = datetime(2026, 11, 1, 12, 0)
+    old = _snap("truncgil", datetime(2026, 10, 30, 17, 45))
+    assert info_text(old, False, now) == "30.10 17:45"
+    assert info_text(old, True, now) == "eski veri 30.10 17:45"
+    fresh = _snap("truncgil", datetime(2026, 11, 1, 11, 58))
+    assert info_text(fresh, True, now) == "eski veri 11:58"
+
+
+def test_info_names_the_source_only_for_fallback():
+    now = datetime(2026, 11, 1, 12, 0)
+    fresh = _snap("altinkaynak", datetime(2026, 11, 1, 11, 59))
+    assert info_text(fresh, False, now) == "Altinkaynak"
+    old = _snap("altinkaynak", datetime(2026, 11, 1, 11, 0))
+    assert info_text(old, False, now) == "Altinkaynak · 11:00"
+
+
 def test_rows_follow_configured_items(make_card):
     card = make_card({"items": ["ceyrek", "usd"]})
     assert list(card._rows) == ["ceyrek", "usd"]
@@ -99,7 +125,7 @@ def test_cached_snapshot_is_rendered_without_network(make_card, snapshot):
     card = make_card(cache=cache)
     assert _texts(card, "gram") == ("6.444 ₺", "%-1,13")
     assert _texts(card, "ons")[0] == "$4.022"
-    assert card.current_info == "Truncgil · 29.10 16:45"
+    assert card.current_info == "29.10 16:45"  # veri eski olduğu için saat görünür
     assert cache.saved == []  # diskten okunan veri geri yazılmaz
 
 
@@ -140,7 +166,7 @@ def test_failure_with_cached_data_marks_info_as_stale(qtbot, make_card, snapshot
     card.on_show()
     assert "eski veri" not in card.current_info  # başlangıçta uyarma
     qtbot.waitUntil(lambda: "eski veri" in card.current_info, timeout=3000)
-    assert card.current_info == "Truncgil · eski veri 29.10 16:45"
+    assert card.current_info == "eski veri 29.10 16:45"
     assert _texts(card, "gram")[0] == "6.444 ₺"  # eski veri yine de görünür
     assert card.current_error == ""
 
@@ -160,7 +186,7 @@ def test_card_renders_inside_host_without_error(qtbot, snapshot):
     host = CardHost(finance.SPEC, card, LOOK, animate=False)
     qtbot.addWidget(host)
     host.show()
-    assert host._info.text() == "Truncgil · 29.10 16:45"
+    assert host._info.text() == "29.10 16:45"
     assert host._error.isHidden()
     card.shutdown()
 
