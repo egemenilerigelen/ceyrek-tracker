@@ -29,10 +29,10 @@ from ceyrek_tracker.cards.spotify.models import (
     Volume,
 )
 from ceyrek_tracker.cards.spotify.palette import DEFAULT, accent_for, extract_palette
-from ceyrek_tracker.cards.spotify.widgets import CoverView, ElidedLabel, JumpSlider
+from ceyrek_tracker.cards.spotify.widgets import CoverView, JumpSlider
 from ceyrek_tracker.cards.spotify.worker import Worker
 from ceyrek_tracker.core.card_base import Card, CardContext, CardSpec, guarded
-from ceyrek_tracker.core.widgets import make_label, repolish
+from ceyrek_tracker.core.widgets import ElidedLabel, make_label, repolish
 from ceyrek_tracker.theme import Look
 from ceyrek_tracker.theme.tokens import rgba
 

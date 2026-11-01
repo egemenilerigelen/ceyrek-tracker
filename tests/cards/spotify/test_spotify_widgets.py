@@ -5,7 +5,6 @@ from PySide6.QtWidgets import QApplication
 
 from ceyrek_tracker.cards.spotify.widgets import (
     CoverView,
-    ElidedLabel,
     JumpSlider,
     art_rect,
 )
@@ -93,20 +92,6 @@ def test_drag_commits_only_on_release(qtbot, slider):
     qtbot.mouseRelease(slider, Qt.MouseButton.LeftButton, pos=QPoint(150, 7))
     assert len(committed) == 1
     assert 70 <= committed[0] <= 80
-
-
-def test_elided_label_shortens_long_text_and_keeps_full_text(qtbot):
-    label = ElidedLabel("value")
-    qtbot.addWidget(label)
-    label.show()
-    label.resize(60, 20)
-    label.set_full_text("Çok uzun bir şarkı adı: Bir Varmış Bir Yokmuş")
-    assert label.text().endswith("…")
-    assert label.full_text().startswith("Çok uzun")
-    assert label.toolTip() == label.full_text()
-    label.resize(600, 20)
-    assert label.text() == label.full_text()
-    assert label.toolTip() == ""
 
 
 def test_cover_view_accepts_image_and_ignores_garbage(qtbot):

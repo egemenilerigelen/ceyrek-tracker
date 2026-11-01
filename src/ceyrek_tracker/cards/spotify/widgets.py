@@ -11,11 +11,10 @@ from PySide6.QtGui import (
     QPainter,
     QPainterPath,
     QPixmap,
-    QResizeEvent,
     QWheelEvent,
     qAlpha,
 )
-from PySide6.QtWidgets import QLabel, QSizePolicy, QSlider, QStyle, QWidget
+from PySide6.QtWidgets import QSlider, QStyle, QWidget
 
 from ceyrek_tracker.core.widgets import repolish
 from ceyrek_tracker.theme import Look
@@ -132,36 +131,6 @@ class JumpSlider(QSlider):
 
     def wheelEvent(self, event: QWheelEvent) -> None:
         event.ignore()
-
-
-class ElidedLabel(QLabel):
-    """Sığmayan metni '…' ile kısaltır; kart genişliğini uzun şarkı adlarıyla şişirmez."""
-
-    def __init__(self, role: str | None = None, parent: QWidget | None = None) -> None:
-        super().__init__(parent)
-        if role:
-            self.setProperty("role", role)
-        self.setTextInteractionFlags(Qt.TextInteractionFlag.NoTextInteraction)
-        self.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
-        self._full = ""
-
-    def set_full_text(self, text: str) -> None:
-        self._full = text
-        self._elide()
-
-    def full_text(self) -> str:
-        return self._full
-
-    def resizeEvent(self, event: QResizeEvent) -> None:
-        super().resizeEvent(event)
-        self._elide()
-
-    def _elide(self) -> None:
-        shown = self.fontMetrics().elidedText(
-            self._full, Qt.TextElideMode.ElideRight, max(0, self.width())
-        )
-        self.setText(shown)
-        self.setToolTip(self._full if shown != self._full else "")
 
 
 class CoverView(QWidget):
