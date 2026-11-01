@@ -44,7 +44,7 @@ INSTRUMENTS: tuple[Instrument, ...] = (
 _BY_ID: dict[str, Instrument] = {i.id: i for i in INSTRUMENTS}
 
 # Kartta varsayılan olarak gösterilenler (sıra = görünüm sırası).
-DEFAULT_ITEMS: tuple[str, ...] = ("usd", "eur", "gbp", "gram", "ceyrek", "gumus", "ons")
+DEFAULT_ITEMS: tuple[str, ...] = ("usd", "eur", "gbp", "gram", "ceyrek")
 
 
 def get_instrument(type_id: str) -> Instrument | None:

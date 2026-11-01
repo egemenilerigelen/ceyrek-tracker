@@ -9,7 +9,7 @@ kapanabilir, katlanabilir ve sıralanabilir.
 </p>
 
 > Proje geliştirme aşamasında. Şu an panel iskeleti, tema katmanı, üst bilgi satırı ve
-> **hava durumu**, **finans** (döviz, altın, gümüş) ve **Spotify** kartları çalışıyor.
+> **hava durumu**, **finans** (döviz, altın) ve **Spotify** kartları çalışıyor.
 > Sistem, takvim, pil/ses ve pano kartları sırayla eklenecek.
 
 ## Kullanım
@@ -43,7 +43,7 @@ olursa tepsiden uyarı gelir ve `hotkey` değiştirilebilir.
 
 ### Finans kartı
 
-Dolar, euro, sterlin, gram altın, çeyrek altın, gümüş ve ons satış fiyatlarını (ve
+Dolar, euro, sterlin, gram altın ve çeyrek altın satış fiyatlarını (ve
 günlük değişimi) yalnızca yazı olarak gösterir. Veri, panel açıkken dakikada bir
 Truncgil'den çekilir; ulaşılamazsa Altınkaynak denenir. Başlıktaki bilgi normalde boştur;
 yalnızca yedek kaynak devredeyse kaynağın adı (fiyatlar kaynağa göre değişir), veri 15
@@ -53,8 +53,9 @@ notu yazar.
 Gösterilecek satırlar `cards` içindeki `finance` ayarında `items` ile seçilir (sıra
 korunur): `usd`, `eur`, `gbp`, `chf`, `gram`, `gram_has`, `ceyrek`, `yarim`, `tam`,
 `cumhuriyet`, `ata`, `resat`, `hamit`, `ikibucuk`, `gremse`, `besli`, `ayar14`, `ayar18`,
-`bilezik22`, `ons`, `gumus`. Altınkaynak'ta karşılığı olmayan satırlar (ör. `cumhuriyet`)
-o kaynağa düşülünce `—` görünür.
+`bilezik22`, `ons`, `gumus`. Ons ve gümüş varsayılanda gösterilmez, `items` ile eklenir.
+Altınkaynak'ta karşılığı olmayan satırlar (ör. `cumhuriyet`) o kaynağa düşülünce `—`
+görünür.
 
 ### Spotify kartı
 

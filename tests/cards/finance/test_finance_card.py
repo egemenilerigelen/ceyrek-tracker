@@ -115,6 +115,11 @@ def test_info_names_the_source_only_for_fallback():
     assert info_text(old, False, now) == "Altinkaynak · 11:00"
 
 
+def test_silver_and_ons_are_not_shown_by_default():
+    assert "gumus" not in DEFAULT_ITEMS
+    assert "ons" not in DEFAULT_ITEMS
+
+
 def test_rows_follow_configured_items(make_card):
     card = make_card({"items": ["ceyrek", "usd"]})
     assert list(card._rows) == ["ceyrek", "usd"]
@@ -122,7 +127,7 @@ def test_rows_follow_configured_items(make_card):
 
 def test_cached_snapshot_is_rendered_without_network(make_card, snapshot):
     cache = _Cache(snapshot)
-    card = make_card(cache=cache)
+    card = make_card({"items": ["gram", "ons"]}, cache=cache)
     assert _texts(card, "gram") == ("6.444 ₺", "%-1,13")
     assert _texts(card, "ons")[0] == "$4.022"
     assert card.current_info == "29.10 16:45"  # veri eski olduğu için saat görünür
