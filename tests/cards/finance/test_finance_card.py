@@ -167,8 +167,11 @@ def test_card_renders_inside_host_without_error(qtbot, snapshot):
 
 def test_every_instrument_has_a_badge_symbol():
     from ceyrek_tracker.cards.finance.catalog import INSTRUMENTS
+    from ceyrek_tracker.cards.finance.icon import PICTOGRAMS
 
     assert all(i.symbol for i in INSTRUMENTS)
+    # Element simgesi (Au, Ag) kalmadı: madenler çizimle gösterilir.
+    assert {i.symbol for i in INSTRUMENTS if i.id in ("gram", "ceyrek", "ons")} <= set(PICTOGRAMS)
 
 
 def test_each_row_has_a_badge_that_follows_look(make_card):
@@ -176,3 +179,9 @@ def test_each_row_has_a_badge_that_follows_look(make_card):
     assert len(card._badges) == 2
     card.set_look(resolve_look("light", "normal", 1.0))
     assert card._badges[0]._color.name() == resolve_look("light", "normal", 1.0).theme.text_dim
+
+
+def test_silver_has_its_own_icon():
+    from ceyrek_tracker.cards.finance.catalog import get_instrument
+
+    assert get_instrument("gumus").symbol != get_instrument("gram").symbol

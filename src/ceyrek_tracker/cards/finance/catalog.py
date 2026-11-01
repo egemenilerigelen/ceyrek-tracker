@@ -13,7 +13,7 @@ from dataclasses import dataclass
 class Instrument:
     id: str
     name: str
-    symbol: str  # satır rozetindeki yazı: para simgesi ya da element simgesi
+    symbol: str  # satır simgesi: para simgesi (yazı) ya da çizim adı (bkz. icon.py)
     currency: str = "TRY"
 
 
@@ -22,23 +22,23 @@ INSTRUMENTS: tuple[Instrument, ...] = (
     Instrument("eur", "Euro (EUR)", "€"),
     Instrument("gbp", "Sterlin (GBP)", "£"),
     Instrument("chf", "İsviçre Frangı (CHF)", "Fr"),
-    Instrument("gram", "Gram Altın", "Au"),
-    Instrument("gram_has", "Has Altın (gr)", "Au"),
-    Instrument("ceyrek", "Çeyrek Altın", "Au"),
-    Instrument("yarim", "Yarım Altın", "Au"),
-    Instrument("tam", "Tam Altın", "Au"),
-    Instrument("cumhuriyet", "Cumhuriyet Altını", "Au"),
-    Instrument("ata", "Ata Altın", "Au"),
-    Instrument("resat", "Reşat Altın", "Au"),
-    Instrument("hamit", "Hamit Altın", "Au"),
-    Instrument("ikibucuk", "İkibuçuk Altın", "Au"),
-    Instrument("gremse", "Gremse Altın", "Au"),
-    Instrument("besli", "Beşli Altın", "Au"),
-    Instrument("ayar14", "14 Ayar (gr)", "Au"),
-    Instrument("ayar18", "18 Ayar (gr)", "Au"),
-    Instrument("bilezik22", "22 Ayar Bilezik (gr)", "Au"),
-    Instrument("ons", "Ons Altın", "Au", currency="USD"),
-    Instrument("gumus", "Gümüş (gr)", "Ag"),
+    Instrument("gram", "Gram Altın", "bar"),
+    Instrument("gram_has", "Has Altın (gr)", "bar"),
+    Instrument("ceyrek", "Çeyrek Altın", "coin"),
+    Instrument("yarim", "Yarım Altın", "coin"),
+    Instrument("tam", "Tam Altın", "coin"),
+    Instrument("cumhuriyet", "Cumhuriyet Altını", "coin"),
+    Instrument("ata", "Ata Altın", "coin"),
+    Instrument("resat", "Reşat Altın", "coin"),
+    Instrument("hamit", "Hamit Altın", "coin"),
+    Instrument("ikibucuk", "İkibuçuk Altın", "coin"),
+    Instrument("gremse", "Gremse Altın", "coin"),
+    Instrument("besli", "Beşli Altın", "coin"),
+    Instrument("ayar14", "14 Ayar (gr)", "ring"),
+    Instrument("ayar18", "18 Ayar (gr)", "ring"),
+    Instrument("bilezik22", "22 Ayar Bilezik (gr)", "ring"),
+    Instrument("ons", "Ons Altın", "weight", currency="USD"),
+    Instrument("gumus", "Gümüş (gr)", "gem"),
 )
 
 _BY_ID: dict[str, Instrument] = {i.id: i for i in INSTRUMENTS}
