@@ -75,6 +75,27 @@ QToolButton[role="output"]:hover {{ background: {shade}; color: {t.text}; }}
 QToolButton[role="icon"][active="true"] {{ color: {t.accent}; }}
 QToolButton[role="icon"]:disabled,
 QToolButton[role="output"]:disabled {{ color: {rgba(t.text_dim, 0.35)}; }}
+QToolButton[role="copy"] {{
+    background: transparent;
+    border: none;
+    border-radius: {t.radius_small}px;
+    color: {t.text_dim};
+    font-family: '{ICON_FONT}';
+    font-size: {m.fs(9)}px;
+    padding: {m.sp(2)}px {m.sp(3)}px;
+}}
+QToolButton[role="copy"]:hover {{ background: {t.surface_hover}; color: {t.text}; }}
+QToolButton[role="copy"][active="true"] {{ color: {t.accent}; }}
+QToolButton[role="remove"] {{
+    background: transparent;
+    border: none;
+    color: transparent;
+    font-family: '{ICON_FONT}';
+    font-size: {m.fs(8)}px;
+    padding: {m.sp(2)}px {m.sp(3)}px;
+}}
+QToolButton[role="remove"][shown="true"] {{ color: {rgba(t.text_dim, 0.75)}; }}
+QToolButton[role="remove"][shown="true"]:hover {{ color: {t.text}; }}
 QToolButton[role="play"] {{
     background: transparent;
     border: none;

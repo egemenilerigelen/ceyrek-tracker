@@ -141,9 +141,9 @@ def go_live(card, clock, volume=DEFAULT_VOLUME, **kwargs):
     card._apply(Reading(playing_track(clock, **kwargs), volume))
 
 
-def test_registered_last(qtbot):
+def test_registered(qtbot):
     assert SPEC.id == "spotify"
-    assert CARDS[-1] is SPEC
+    assert SPEC in CARDS
     assert SPEC.title == "Spotify"
 
 

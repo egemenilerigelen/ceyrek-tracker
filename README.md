@@ -9,8 +9,8 @@ kapanabilir, katlanabilir ve sıralanabilir.
 </p>
 
 > Proje geliştirme aşamasında. Şu an panel iskeleti, tema katmanı, üst bilgi satırı ve
-> **hava durumu**, **finans** (döviz, altın) ve **Spotify** kartları çalışıyor.
-> Sistem, takvim, pil/ses ve pano kartları sırayla eklenecek.
+> **hava durumu**, **finans** (döviz, altın), **Spotify** ve **pano** kartları
+> çalışıyor. Sistem, takvim ve pil/ses kartları sırayla eklenecek.
 
 ## Kullanım
 
@@ -86,6 +86,26 @@ bir okunur.
   **varsayılan** çıkışı olur (yalnızca Spotify'ı değil tüm sistemi etkiler).
 - Reklam sırasında Spotify atlamayı ve şarkı geçmeyi kapatır; düğmeler de pasif görünür.
 
+### Pano kartı
+
+Son 5 kopyalanan metni, en yenisi üstte, listeler. Satırın herhangi bir yerine tıklamak
+(başındaki kopyalama simgesi dahil) metni panoya geri koyar (bir an onay işareti görünür) ve
+satırı en üste taşır; aynı metin tekrar kopyalanırsa ikinci satır açılmaz, var olan satır
+yukarı çıkar. Fare satırın üzerindeyken sağda sönük bir çarpı belirir; çarpının üstüne gelince
+aydınlanır, tıklayınca satır geçmişten silinir (panodaki metne dokunmaz).
+
+- **Panel kapalıyken de kopyalananlar yakalanır:** kart panoyu olay olarak dinler, yoklama
+  yoktur, boşta işlemci kullanmaz. Uygulama açılırken panoda duran metin de listelenir.
+- **Yalnızca metin:** resimler ve Explorer'da kopyalanan dosyalar listeye girmez; tarayıcıdan
+  kopyalanan bağlantı metindir, girer.
+- **Parolalar atlanır:** parola yöneticilerinin panoya koyarken ekledikleri "geçmişe alma"
+  işaretini taşıyan içerik listeye hiç girmez.
+- **Satırlar tek satıra indirilir:** çok satırlı metin boşluklarla birleşik gösterilir,
+  sığmayan kısım `…` ile kesilir (üzerine gelince tamamı görünür). Kopyalanan metin değişmez,
+  satır sonlarıyla olduğu gibi geri gelir.
+- **Geçmiş diske yazılmaz:** yalnızca bellektedir; uygulama kapanınca silinir. Pano parola ya da
+  gizli bilgi taşıyabileceği için bilerek böyle.
+
 ## Kurulum ve çalıştırma
 
 Python 3.11 veya üstü gerekir.
@@ -131,7 +151,8 @@ src/ceyrek_tracker/
 │   ├── __init__.py       # kart kayıt defteri (CARDS)
 │   ├── weather/          # card · api · cache · places · icon · backdrop
 │   ├── finance/          # card · catalog · models · providers · service · cache · formatting
-│   └── spotify/          # card · backend · windows (WinRT + pycaw) · worker · palette · backdrop · logo · cache · models · widgets · formatting
+│   ├── spotify/          # card · backend · windows (WinRT + pycaw) · worker · palette · backdrop · logo · cache · models · widgets · formatting
+│   └── clipboard/        # card · history
 ├── theme/            # tüm renk, boyut, yazı tipi: tokens.py (tek yer) + stil sayfası
 └── infra/            # kaynaktan bağımsız altyapı: paths · storage · http · logging_setup
 ```
