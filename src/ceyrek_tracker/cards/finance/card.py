@@ -101,7 +101,7 @@ class FinanceCard(Card):
 
         grid = QGridLayout()
         grid.setHorizontalSpacing(sp(8))
-        grid.setVerticalSpacing(sp(2))
+        grid.setVerticalSpacing(sp(3))
         grid.setColumnStretch(1, 1)
         right = Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
 
