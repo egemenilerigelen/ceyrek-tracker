@@ -1,4 +1,4 @@
-"""Panelin üst bilgisi: büyük saat, yanında tarih, gün adı ve bilgisayarın açık kalma süresi."""
+"""Panelin üst bilgisi: solda küçük saat, yanında tarih, gün adı ve açık kalma süresi."""
 
 from __future__ import annotations
 
@@ -47,7 +47,7 @@ def format_uptime_line(uptime: int) -> str:
 
 
 class HeaderBar(QWidget):
-    """Telefon ana ekranı düzeni: solda büyük saat, yanında küçük tarih ve açık kalma süresi."""
+    """Kompakt düzen: solda saat, yanında iki satırlık küçük tarih ve açık kalma süresi."""
 
     pin_clicked = Signal()
 
@@ -55,7 +55,7 @@ class HeaderBar(QWidget):
         super().__init__(parent)
         row = QHBoxLayout(self)
         row.setContentsMargins(0, 0, 0, 0)
-        row.setSpacing(look.metrics.sp(10))
+        row.setSpacing(look.metrics.sp(8))
         self._clock = make_label("", "clock")
         row.addWidget(self._clock)
 

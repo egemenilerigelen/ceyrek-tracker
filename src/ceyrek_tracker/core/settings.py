@@ -82,7 +82,7 @@ class Settings:
     pinned: bool = False
     animations: bool = True
     animation_ms: int = 220
-    panel_width: int = 310
+    panel_width: int = 280
     # Kısayol ve ekran seçimi
     hotkey: str = "win+alt+p"  # boş = kısayol yok
     hotkey_screen: str = "cursor"
@@ -151,7 +151,7 @@ class Settings:
             pinned=_flag(data, "pinned", d.pinned),
             animations=_flag(data, "animations", d.animations),
             animation_ms=_number(data, "animation_ms", 50, 1000, d.animation_ms),
-            panel_width=_number(data, "panel_width", 260, 640, d.panel_width),
+            panel_width=_number(data, "panel_width", 240, 640, d.panel_width),
             hotkey=hotkey.strip().lower(),
             hotkey_screen=_choice(data, "hotkey_screen", SCREEN_MODES, d.hotkey_screen),
             trigger_screen=trigger_screen,

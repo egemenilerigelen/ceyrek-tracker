@@ -100,7 +100,7 @@ class FinanceCard(Card):
         outer.setContentsMargins(sp(2), 0, sp(2), sp(2))
 
         grid = QGridLayout()
-        grid.setHorizontalSpacing(sp(8))
+        grid.setHorizontalSpacing(sp(6))
         grid.setVerticalSpacing(sp(3))
         grid.setColumnStretch(1, 1)
         right = Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
@@ -114,7 +114,7 @@ class FinanceCard(Card):
             grid.addWidget(make_label(instrument.name, "row"), row, 1)
             grid.addWidget(sell, row, 2, right)
             # Değişim sütunu fiyatın sağında, sola hizalı ve ondan ayrık durur.
-            change.setContentsMargins(sp(18), 0, 0, 0)
+            change.setContentsMargins(sp(12), 0, 0, 0)
             grid.addWidget(
                 change, row, 3, Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
             )

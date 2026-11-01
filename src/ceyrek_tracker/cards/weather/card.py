@@ -75,7 +75,7 @@ class WeatherCard(Card):
         self._backdrop = WeatherBackdrop(look)
         inner = self._backdrop
         box = QVBoxLayout(inner)
-        box.setContentsMargins(sp(10), sp(8), sp(10), sp(8))
+        box.setContentsMargins(sp(8), sp(6), sp(8), sp(6))
         box.setSpacing(sp(4))
 
         top = QHBoxLayout()
@@ -92,13 +92,13 @@ class WeatherCard(Card):
         text.addStretch()
         top.addLayout(text, 1)
         self.info_menu = self._build_menu()
-        self._icon = WeatherIcon(fs(28))
+        self._icon = WeatherIcon(fs(24))
         self._icon.set_colors(look.theme.accent, look.theme.text_soft)
         top.addWidget(self._icon, 0, Qt.AlignmentFlag.AlignVCenter)
         box.addLayout(top)
 
         tiles = QHBoxLayout()
-        tiles.setSpacing(sp(5))
+        tiles.setSpacing(sp(4))
         self._humidity = self._tile(tiles, "Nem", look)
         self._wind = self._tile(tiles, "Rüzgar", look)
         self._rain = self._tile(tiles, "Yağış", look)
@@ -115,7 +115,7 @@ class WeatherCard(Card):
         days.setSpacing(sp(4))
         self._day_labels: list[tuple] = []
         for _ in range(3):
-            icon = WeatherIcon(fs(22))
+            icon = WeatherIcon(fs(18))
             icon.set_colors(look.theme.accent, look.theme.text_soft)
             name = make_label("", "dim")
             value = make_label("", "soft")
@@ -124,7 +124,7 @@ class WeatherCard(Card):
             text.addWidget(name)
             text.addWidget(value)
             cell = QHBoxLayout()
-            cell.setSpacing(sp(5))
+            cell.setSpacing(sp(3))
             cell.addStretch(1)
             cell.addWidget(icon)
             cell.addLayout(text)
@@ -181,7 +181,7 @@ class WeatherCard(Card):
         sp = look.metrics.sp
         tile = make_frame("tile")
         col = QVBoxLayout(tile)
-        col.setContentsMargins(sp(8), sp(3), sp(8), sp(3))
+        col.setContentsMargins(sp(6), sp(2), sp(6), sp(2))
         col.setSpacing(0)
         col.addWidget(make_label(title, "dim"))
         value = make_label("--", "value")

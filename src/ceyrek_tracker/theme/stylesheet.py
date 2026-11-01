@@ -18,27 +18,27 @@ QLabel {{
     background: transparent;
     color: {t.text};
     font-family: {UI_FONT};
-    font-size: {m.fs(13)}px;
+    font-size: {m.fs(12)}px;
 }}
-QLabel[role="dim"] {{ color: {t.text_dim}; font-size: {m.fs(11)}px; }}
-QLabel[role="soft"] {{ color: {t.text_soft}; font-size: {m.fs(12)}px; }}
-QLabel[role="title"] {{ color: {t.text_dim}; font-size: {m.fs(12)}px; }}
-QLabel[role="accent"] {{ color: {t.accent}; font-size: {m.fs(12)}px; }}
-QLabel[role="header"] {{ color: {t.text_dim}; font-size: {m.fs(11)}px; }}
-QLabel[role="header_date"] {{ color: {t.text_soft}; font-size: {m.fs(12)}px; }}
-QLabel[role="clock"] {{ font-size: {m.fs(44)}px; font-weight: 400; }}
-QLabel[role="big"] {{ font-size: {m.fs(28)}px; font-weight: 500; }}
-QLabel[role="value"] {{ font-size: {m.fs(13)}px; font-weight: 500; }}
-QLabel[role="up"] {{ color: {t.up}; font-size: {m.fs(11)}px; }}
-QLabel[role="down"] {{ color: {t.down}; font-size: {m.fs(11)}px; }}
-QLabel[role="row"] {{ color: {t.text_soft}; font-size: {m.fs(11)}px; }}
-QLabel[role="row_value"] {{ color: {t.accent}; font-size: {m.fs(11)}px; font-weight: 500; }}
+QLabel[role="dim"] {{ color: {t.text_dim}; font-size: {m.fs(10)}px; }}
+QLabel[role="soft"] {{ color: {t.text_soft}; font-size: {m.fs(11)}px; }}
+QLabel[role="title"] {{ color: {t.text_dim}; font-size: {m.fs(11)}px; }}
+QLabel[role="accent"] {{ color: {t.accent}; font-size: {m.fs(11)}px; }}
+QLabel[role="header"] {{ color: {t.text_dim}; font-size: {m.fs(10)}px; }}
+QLabel[role="header_date"] {{ color: {t.text_soft}; font-size: {m.fs(11)}px; }}
+QLabel[role="clock"] {{ font-size: {m.fs(24)}px; font-weight: 500; }}
+QLabel[role="big"] {{ font-size: {m.fs(24)}px; font-weight: 500; }}
+QLabel[role="value"] {{ font-size: {m.fs(12)}px; font-weight: 500; }}
+QLabel[role="up"] {{ color: {t.up}; font-size: {m.fs(10)}px; }}
+QLabel[role="down"] {{ color: {t.down}; font-size: {m.fs(10)}px; }}
+QLabel[role="row"] {{ color: {t.text_soft}; font-size: {m.fs(10)}px; }}
+QLabel[role="row_value"] {{ color: {t.accent}; font-size: {m.fs(10)}px; font-weight: 500; }}
 QLabel[role="warn"] {{ color: {t.warn}; }}
-QLabel[role="error"] {{ color: {t.down}; font-size: {m.fs(12)}px; }}
+QLabel[role="error"] {{ color: {t.down}; font-size: {m.fs(11)}px; }}
 QLabel[role="icon"] {{
     color: {t.text_dim};
     font-family: '{ICON_FONT}';
-    font-size: {m.fs(13)}px;
+    font-size: {m.fs(12)}px;
 }}
 QLabel[role="icon"][accent="true"] {{ color: {t.accent}; }}
 
@@ -67,7 +67,7 @@ QToolButton[role="output"] {{
     border-radius: {t.radius_small}px;
     color: {t.text_dim};
     font-family: '{ICON_FONT}';
-    font-size: {m.fs(13)}px;
+    font-size: {m.fs(12)}px;
     padding: {m.sp(3)}px;
 }}
 QToolButton[role="icon"]:hover {{ background: {t.surface_hover}; color: {t.text}; }}
@@ -78,14 +78,14 @@ QToolButton[role="output"]:disabled {{ color: {rgba(t.text_dim, 0.35)}; }}
 QToolButton[role="play"] {{
     background: transparent;
     border: none;
-    border-radius: {m.sp(13)}px;
+    border-radius: {m.sp(12)}px;
     color: {t.text};
     font-family: '{ICON_FONT}';
-    font-size: {m.fs(13)}px;
-    min-width: {m.sp(26)}px;
-    max-width: {m.sp(26)}px;
-    min-height: {m.sp(26)}px;
-    max-height: {m.sp(26)}px;
+    font-size: {m.fs(12)}px;
+    min-width: {m.sp(24)}px;
+    max-width: {m.sp(24)}px;
+    min-height: {m.sp(24)}px;
+    max-height: {m.sp(24)}px;
 }}
 QToolButton[role="play"]:hover {{ background: {t.surface_hover}; }}
 QToolButton[role="play"][playing="false"] {{ background: {rgba(t.accent, 0.38)}; }}
@@ -145,7 +145,7 @@ QMenu {{
     border: 1px solid {t.border};
     border-radius: {t.radius_small}px;
     font-family: {UI_FONT};
-    font-size: {m.fs(12)}px;
+    font-size: {m.fs(11)}px;
     padding: {m.sp(4)}px;
 }}
 QMenu::item {{

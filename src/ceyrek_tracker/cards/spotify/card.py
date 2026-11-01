@@ -45,9 +45,9 @@ VOLUME_HOLD_SECONDS = 1.5
 RECHECK_MS = 350  # komuttan sonra gerçek durumu yeniden oku
 VOLUME_DEBOUNCE_MS = 40
 SEEK_STEPS = 10  # ilerleme çubuğunun çözünürlüğü: saniyede 10 adım
-COVER_SIZE = 48
-TIME_WIDTH = 32  # süre yazılarının genişliği (mantıksal px)
-ICON_WIDTH = 24  # alt satırdaki simge düğmelerinin genişliği
+COVER_SIZE = 42
+TIME_WIDTH = 28  # süre yazılarının genişliği (mantıksal px)
+ICON_WIDTH = 22  # alt satırdaki simge düğmelerinin genişliği
 
 # Segoe MDL2 Assets karakterleri
 PLAY, PAUSE = "", ""
@@ -147,11 +147,11 @@ class SpotifyCard(Card):
         self._backdrop = box = SpotifyBackdrop(look)
         outer.addWidget(box)
         rows = QVBoxLayout(box)
-        rows.setContentsMargins(sp(10), sp(7), sp(10), sp(5))
+        rows.setContentsMargins(sp(8), sp(6), sp(8), sp(4))
         rows.setSpacing(sp(3))
 
         top = QHBoxLayout()
-        top.setSpacing(sp(10))
+        top.setSpacing(sp(8))
         self._cover = CoverView(sp(COVER_SIZE), look)
         top.addWidget(self._cover)
         text = QVBoxLayout()
@@ -166,7 +166,7 @@ class SpotifyCard(Card):
         rows.addLayout(top)
 
         progress = QHBoxLayout()
-        progress.setSpacing(sp(6))
+        progress.setSpacing(sp(4))
         self._elapsed = make_label("0:00", "dim")
         self._total = make_label("0:00", "dim")
         self._elapsed.setFixedWidth(sp(TIME_WIDTH))
@@ -184,7 +184,7 @@ class SpotifyCard(Card):
 
         # Yalnızca düğmeler: oynat kartın tam ortasında.
         controls = QHBoxLayout()
-        controls.setSpacing(sp(14))
+        controls.setSpacing(sp(10))
         self._shuffle = _tool(SHUFFLE, "Karıştır")
         self._previous = _tool(PREVIOUS, "Önceki")
         self._play = _tool(PLAY, "Oynat", role="play")

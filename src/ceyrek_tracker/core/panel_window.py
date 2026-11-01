@@ -63,8 +63,8 @@ class PanelWindow(QWidget):
         self._surface = PanelSurface(look, self)
         sp = look.metrics.sp
         root = QVBoxLayout(self._surface)
-        root.setContentsMargins(sp(16), sp(12), sp(10), sp(10))
-        root.setSpacing(sp(8))
+        root.setContentsMargins(sp(14), sp(8), sp(8), sp(8))
+        root.setSpacing(sp(4))
 
         self.header = HeaderBar(look)
         self.header.pin_clicked.connect(self.pin_clicked)
@@ -73,8 +73,8 @@ class PanelWindow(QWidget):
         self._scroll = AutoHideScrollArea()
         inner = QWidget()
         self._column = QVBoxLayout(inner)
-        self._column.setContentsMargins(0, 0, sp(8), 0)
-        self._column.setSpacing(sp(10))
+        self._column.setContentsMargins(0, 0, sp(6), 0)
+        self._column.setSpacing(sp(8))
         self._column.addStretch(1)
         self._scroll.setWidget(inner)
         root.addWidget(self._scroll, 1)
