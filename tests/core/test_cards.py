@@ -113,6 +113,30 @@ def test_collapse_toggles_state_and_notifies(qtbot):
     assert not host._body.isHidden()
 
 
+class _CollapseWatcher(_Plain):
+    def __init__(self, context):
+        super().__init__(context)
+        self.collapsed_calls = []
+
+    def on_collapsed(self, collapsed):
+        self.collapsed_calls.append(collapsed)
+
+
+def test_card_is_told_when_it_is_collapsed_or_expanded(qtbot):
+    manager = CardManager([_spec("a", _CollapseWatcher)], [], LOOK, animate=False)
+    host = manager.hosts[0]
+    host.toggle()
+    host.toggle()
+    assert host.card.collapsed_calls == [True, False]
+
+
+def test_card_built_collapsed_is_told_once(qtbot):
+    manager = CardManager(
+        [_spec("a", _CollapseWatcher)], [CardSetting("a", collapsed=True)], LOOK, animate=False
+    )
+    assert manager.hosts[0].card.collapsed_calls == [True]
+
+
 def test_saved_collapsed_state_is_restored(qtbot):
     manager = CardManager([_spec("a", _Plain)], [CardSetting("a", collapsed=True)], LOOK)
     assert manager.hosts[0].collapsed
@@ -176,3 +200,28 @@ def test_zero_height_body_leaves_no_gap_below_the_header(qtbot):
     host._body.setMaximumHeight(0)
     header_height = host.layout().itemAt(0).widget().sizeHint().height()
     assert host.sizeHint().height() == header_height
+
+
+class _OwnIcon(QLabel):
+    def __init__(self, look):
+        super().__init__("logo")
+        self.looks = []
+
+    def set_look(self, look):
+        self.looks.append(look)
+
+
+def test_card_can_draw_its_own_header_icon_and_it_follows_the_look(qtbot):
+    spec = CardSpec("a", "A", "", _Plain, icon_factory=_OwnIcon)
+    manager = CardManager([spec], [], LOOK, animate=False)
+    host = manager.hosts[0]
+    assert isinstance(host._icon, _OwnIcon)
+    manager.set_look(LOOK)
+    assert host._icon.looks == [LOOK]
+
+
+def test_header_icon_defaults_to_the_font_glyph(qtbot):
+    manager = CardManager([_spec("a", _Plain)], [], LOOK, animate=False)
+    icon = manager.hosts[0]._icon
+    assert isinstance(icon, QLabel)
+    assert icon.property("role") == "icon"

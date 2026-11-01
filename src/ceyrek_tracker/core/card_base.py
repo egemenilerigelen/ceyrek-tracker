@@ -53,6 +53,10 @@ class Card(QWidget):
     def on_hide(self) -> None:
         """Panel kapandı: zamanlayıcıları ve animasyonları durdur."""
 
+    def on_collapsed(self, collapsed: bool) -> None:
+        """Kart katlandı ya da açıldı (kurulurken katlıysa bir kez de çağrılır). Katlıyken
+        gövde görünmez; kart başlık bilgisinde (`set_info`) özet gösterebilir."""
+
     def set_look(self, look: Look) -> None:
         self.look = look
         self.update()
@@ -98,3 +102,7 @@ class CardSpec:
     icon: str  # Segoe MDL2 Assets karakteri
     factory: Callable[[CardContext], Card]
     default_enabled: bool = True
+    # Verilirse başlık simgesi yazı tipi yerine bu widget'la çizilir (yazı tipinde
+    # karşılığı olmayan, ör. marka logoları için). Widget `set_look(look)` sunarsa
+    # görünüm değişince çağrılır.
+    icon_factory: Callable[[Look], QWidget] | None = None

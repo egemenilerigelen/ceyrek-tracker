@@ -48,7 +48,8 @@ class CardHost(QWidget):
         row = QHBoxLayout(header)
         row.setContentsMargins(0, sp(2), 0, sp(2))
         row.setSpacing(sp(8))
-        row.addWidget(make_label(spec.icon, "icon"))
+        self._icon = spec.icon_factory(look) if spec.icon_factory else make_label(spec.icon, "icon")
+        row.addWidget(self._icon)
         row.addWidget(make_label(spec.title, "title"))
         row.addStretch()
         self._info = ClickableLabel()
@@ -86,6 +87,7 @@ class CardHost(QWidget):
             self.set_error(error)
         if collapsed:
             self._apply_collapsed_state()
+            self._call("on_collapsed", True)
 
     # --- Katlanma -----------------------------------------------------------
 
@@ -114,6 +116,7 @@ class CardHost(QWidget):
             self._anim.start()
         else:
             self._apply_collapsed_state()
+        self._call("on_collapsed", collapsed)
         if emit:
             self.collapsed_changed.emit(self.spec.id, collapsed)
 
@@ -146,6 +149,8 @@ class CardHost(QWidget):
         self._call("on_hide")
 
     def set_look(self, look: Look) -> None:
+        if (update := getattr(self._icon, "set_look", None)) is not None:
+            update(look)
         if self.card is not None:
             self._call("set_look", look)
 
