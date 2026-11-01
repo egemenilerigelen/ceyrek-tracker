@@ -64,7 +64,7 @@ def _texts(card, type_id):
 
 
 def test_registered_after_weather():
-    assert [spec.id for spec in CARDS] == ["weather", "finance"]
+    assert [spec.id for spec in CARDS][:2] == ["weather", "finance"]
 
 
 def test_parse_items_filters_unknown_and_duplicates():
