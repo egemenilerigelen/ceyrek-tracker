@@ -5,7 +5,7 @@ Ekranın sağ kenarından kayarak açılan, modüler bir Windows durum paneli. H
 kapanabilir, katlanabilir ve sıralanabilir.
 
 <p>
-  <img src="docs/panel.png" alt="Panel: üst bilgi satırı ve hava durumu kartı" width="340">
+  <img src="docs/panel.png" alt="Panel: üst bilgi satırı, hava durumu ve finans kartları" width="340">
 </p>
 
 > Proje geliştirme aşamasında. Şu an panel iskeleti, tema katmanı, üst bilgi satırı ve
