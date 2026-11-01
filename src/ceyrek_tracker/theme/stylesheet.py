@@ -11,6 +11,8 @@ from ceyrek_tracker.theme.tokens import ICON_FONT, UI_FONT, Metrics, Theme, rgba
 
 def build_stylesheet(theme: Theme, metrics: Metrics) -> str:
     t, m = theme, metrics
+    # Üzerine gelince koyulaşan dolgu: koyu temada siyah, açık temada koyu mürekkep.
+    shade = rgba("#000000", 0.30) if t.name == "dark" else rgba(t.ink, 0.12)
     return f"""
 QLabel {{
     background: transparent;
@@ -45,6 +47,7 @@ QFrame[role="inner"] {{
     border: 1px solid {t.border};
     border-radius: {t.radius_card}px;
 }}
+QFrame[role="inner"][sunk="true"] {{ background: transparent; }}
 QFrame[role="tile"] {{
     background: {t.surface};
     border: none;
@@ -57,7 +60,8 @@ QFrame[role="divider"] {{
     min-height: 1px;
 }}
 
-QToolButton[role="icon"] {{
+QToolButton[role="icon"],
+QToolButton[role="output"] {{
     background: transparent;
     border: none;
     border-radius: {t.radius_small}px;
@@ -67,7 +71,54 @@ QToolButton[role="icon"] {{
     padding: {m.sp(3)}px;
 }}
 QToolButton[role="icon"]:hover {{ background: {t.surface_hover}; color: {t.text}; }}
+QToolButton[role="output"]:hover {{ background: {shade}; color: {t.text}; }}
 QToolButton[role="icon"][active="true"] {{ color: {t.accent}; }}
+QToolButton[role="icon"]:disabled,
+QToolButton[role="output"]:disabled {{ color: {rgba(t.text_dim, 0.35)}; }}
+QToolButton[role="play"] {{
+    background: transparent;
+    border: none;
+    border-radius: {m.sp(13)}px;
+    color: {t.text};
+    font-family: '{ICON_FONT}';
+    font-size: {m.fs(13)}px;
+    min-width: {m.sp(26)}px;
+    max-width: {m.sp(26)}px;
+    min-height: {m.sp(26)}px;
+    max-height: {m.sp(26)}px;
+}}
+QToolButton[role="play"]:hover {{ background: {t.surface_hover}; }}
+QToolButton[role="play"][playing="false"] {{ background: {rgba(t.accent, 0.38)}; }}
+QToolButton[role="play"][playing="false"]:hover {{ background: {rgba(t.accent, 0.5)}; }}
+QToolButton[role="play"]:disabled,
+QToolButton[role="play"][playing="false"]:disabled {{
+    background: transparent;
+    color: {rgba(t.text_dim, 0.35)};
+}}
+
+QSlider[role="seek"], QSlider[role="volume"] {{
+    background: transparent;
+    min-height: {m.sp(14)}px;
+    max-height: {m.sp(14)}px;
+}}
+QSlider::groove:horizontal {{
+    height: {m.sp(4)}px;
+    background: {t.surface_hover};
+    border-radius: {m.sp(2)}px;
+}}
+QSlider::sub-page:horizontal {{ border-radius: {m.sp(2)}px; }}
+QSlider[role="seek"]::sub-page:horizontal {{ background: {t.accent}; }}
+QSlider[role="volume"]::sub-page:horizontal {{ background: {t.text_soft}; }}
+QSlider::handle:horizontal {{
+    background: transparent;
+    width: {m.sp(8)}px;
+    margin: -{m.sp(2)}px 0;
+    border-radius: {m.sp(4)}px;
+}}
+QSlider[hovered="true"]::handle:horizontal {{ background: {t.text}; }}
+QSlider[role="seek"]::sub-page:horizontal:disabled,
+QSlider[role="volume"]::sub-page:horizontal:disabled {{ background: {rgba(t.text_dim, 0.35)}; }}
+QSlider::handle:horizontal:disabled {{ background: transparent; }}
 
 QFrame[role="card_header"] {{ background: transparent; border: none; }}
 QFrame[role="card_header"]:hover QLabel[role="title"] {{ color: {t.text_soft}; }}
