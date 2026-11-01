@@ -9,8 +9,8 @@ kapanabilir, katlanabilir ve sıralanabilir.
 </p>
 
 > Proje geliştirme aşamasında. Şu an panel iskeleti, tema katmanı, üst bilgi satırı ve
-> **hava durumu** ve **finans** (döviz, altın, gümüş) kartları çalışıyor. Sistem, müzik,
-> takvim, pil/ses ve pano kartları sırayla eklenecek.
+> **hava durumu**, **finans** (döviz, altın, gümüş) ve **Spotify** kartları çalışıyor.
+> Sistem, takvim, pil/ses ve pano kartları sırayla eklenecek.
 
 ## Kullanım
 
@@ -56,6 +56,35 @@ korunur): `usd`, `eur`, `gbp`, `chf`, `gram`, `gram_has`, `ceyrek`, `yarim`, `ta
 `bilezik22`, `ons`, `gumus`. Altınkaynak'ta karşılığı olmayan satırlar (ör. `cumhuriyet`)
 o kaynağa düşülünce `—` görünür.
 
+### Spotify kartı
+
+Spotify masaüstü uygulamasında çalan şarkıyı gösterir ve yönetir: kapak, şarkı, sanatçı,
+ilerleme çubuğu (istediğin yere tıklayıp atlanır), önceki / oynat-duraklat /
+sonraki, karıştır, tekrarla, ses düzeyi ve ses çıkışı. Hesap bağlamak gerekmez; veri
+Windows'un medya oturumundan gelir, bu yüzden yalnızca Spotify'ı izler (tarayıcı
+sekmelerini ya da başka çalarları değil) ve Premium şartı yoktur. Panel açıkken saniyede
+bir okunur.
+
+- **Spotify kapalıyken** en son kalan şarkı (kapağı ve konumuyla) görünür; uygulama
+  Spotify kapalıyken açılsa da böyle olur. Oynat/atla düğmeleri pasifleşir; Spotify açılınca
+  güncel şarkı gelir.
+- **Kapak** yalnızca albüm görselidir; Spotify'ın görsele eklediği logo bandı kırpılır.
+- **Renkler kapağı izler:** kartın arka planındaki yumuşak ışık kapağın baskın tonunu yansıtır;
+  şarkı çubuğu, açık karıştır/tekrarla düğmeleri ve oynat dolgusu da aynı tonu alır. Renk,
+  algısal OKLCH uzayında seçilir: siyah, beyaz ve gri alanlar oy kullanmaz, her kapakta ışıma
+  eşit güçte görünür, çubuk gerçek zemininde okunur kalır. Gri kapağa renk uydurulmaz. Kapak
+  yoksa temanın vurgu rengi (altın) kalır.
+- **Arka plan panele oturur:** kartın ayrı bir açık yüzeyi yoktur, panelin zemini doğrudan
+  görünür. Üzerine, kapaktan uzaklaştıkça irileşen dalgalı bir nokta deseni çok hafifçe biner.
+- **Oynat düğmesi** çalarken sade (yalnızca duraklat simgesi), duraklayınca soluk dolgulu
+  görünür.
+- **Katlıyken** başlık satırında "Sanatçı – Şarkı" özeti görünür.
+- **Ses çubuğu** Windows'un sistem sesini (görev çubuğundaki hoparlör) ayarlar; Spotify
+  kapalıyken de çalışır. Spotify'ın uygulama içi ses çubuğu dışarıdan ayarlanamaz.
+- **Çıkış cihazı** düğmesi, bağlı hoparlör ve kulaklıkları listeler; seçilen, Windows'un
+  **varsayılan** çıkışı olur (yalnızca Spotify'ı değil tüm sistemi etkiler).
+- Reklam sırasında Spotify atlamayı ve şarkı geçmeyi kapatır; düğmeler de pasif görünür.
+
 ## Kurulum ve çalıştırma
 
 Python 3.11 veya üstü gerekir.
@@ -100,7 +129,8 @@ src/ceyrek_tracker/
 ├── cards/            # her kart kendi paketi; kartlar birbirini bilmez
 │   ├── __init__.py       # kart kayıt defteri (CARDS)
 │   ├── weather/          # card · api · cache · places · icon · backdrop
-│   └── finance/          # card · catalog · models · providers · service · cache · formatting
+│   ├── finance/          # card · catalog · models · providers · service · cache · formatting
+│   └── spotify/          # card · backend · windows (WinRT + pycaw) · worker · palette · backdrop · logo · cache · models · widgets · formatting
 ├── theme/            # tüm renk, boyut, yazı tipi: tokens.py (tek yer) + stil sayfası
 └── infra/            # kaynaktan bağımsız altyapı: paths · storage · http · logging_setup
 ```
@@ -125,4 +155,5 @@ src/ceyrek_tracker/
 - `settings.json`: ayarlar
 - `weather.json`: son hava durumu yanıtı (internet yokken eski veriyi göstermek için)
 - `last_snapshot.json`: son finans fiyatları (aynı amaçla)
+- `spotify.json`, `spotify_cover.bin`: en son çalan şarkı ve kapağı (Spotify kapalıyken gösterilir)
 - `logs\app.log`: loglar (sorun bildirirken bu dosyayı ekleyin)
