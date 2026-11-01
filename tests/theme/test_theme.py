@@ -1,7 +1,14 @@
 import pytest
 
 from ceyrek_tracker.theme import resolve_look
-from ceyrek_tracker.theme.tokens import DARK, LIGHT, Metrics, blend, contrast_ratio
+from ceyrek_tracker.theme.tokens import (
+    DARK,
+    LIGHT,
+    SERIES_TONES,
+    Metrics,
+    blend,
+    contrast_ratio,
+)
 
 
 @pytest.mark.parametrize("theme", [DARK, LIGHT])
@@ -27,3 +34,27 @@ def test_look_resolution_and_stylesheet():
     assert look.theme.glass_opacity == 0.5
     assert "#112233" in look.stylesheet
     assert resolve_look("yok", "yok", 1.0).theme.name == "dark"
+
+
+@pytest.mark.parametrize("theme", [DARK, LIGHT])
+def test_series_colors_are_readable_on_the_panel(theme):
+    # Telemetri değerleri bu renklerle yazılır; metinle aynı okunabilirlik şartı.
+    backdrop = "#b8b266" if theme is DARK else "#fffaf0"
+    effective = blend(theme.bg, backdrop, theme.glass_opacity)
+    for tone in (*SERIES_TONES, "warn", "down"):
+        assert contrast_ratio(theme.tone_color(tone), effective) >= 4.5, (theme.name, tone)
+
+
+def test_tone_color_maps_names_to_theme_colors():
+    assert DARK.tone_color("blue") == DARK.series[0]
+    assert DARK.tone_color("green") == DARK.series[3]
+    assert DARK.tone_color("warn") == DARK.warn
+    assert DARK.tone_color("down") == DARK.down
+    assert DARK.tone_color("accent") == DARK.accent
+    assert DARK.tone_color("bilinmeyen") == DARK.accent
+
+
+def test_stylesheet_colors_every_metric_tone():
+    sheet = resolve_look("dark", "normal", 1.0).stylesheet
+    for tone in (*SERIES_TONES, "accent", "warn", "down"):
+        assert f'QLabel[role="metric"][tone="{tone}"]' in sheet

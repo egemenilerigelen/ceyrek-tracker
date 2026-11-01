@@ -13,6 +13,8 @@ from dataclasses import dataclass, replace
 UI_FONT = "'Segoe UI Variable Text', 'Segoe UI', sans-serif"
 # Başlık düğmeleri ve kart simgeleri bu simge yazı tipindeki karakterlerle çizilir.
 ICON_FONT = "Segoe MDL2 Assets"
+# Sayısal göstergelerin (telemetri) sabit renk adları; `Theme.series` bu sırayla renk verir.
+SERIES_TONES = ("blue", "cyan", "violet", "green")
 
 
 def parse_hex(color: str) -> tuple[int, int, int]:
@@ -71,6 +73,8 @@ class Theme:
     up: str
     down: str
     warn: str
+    # Grafik serileri (`SERIES_TONES` sırasıyla): koyu zeminde pastel, açık zeminde koyu tonlar.
+    series: tuple[str, str, str, str]
     # Şekil
     radius_panel: int = 14
     radius_card: int = 8
@@ -87,6 +91,12 @@ class Theme:
     @property
     def border(self) -> str:
         return rgba(self.ink, self.border_alpha)
+
+    def tone_color(self, tone: str) -> str:
+        """Gösterge tonunun rengi: seri adları (`SERIES_TONES`), `accent`, `up`, `warn`, `down`."""
+        if tone in SERIES_TONES:
+            return self.series[SERIES_TONES.index(tone)]
+        return {"up": self.up, "warn": self.warn, "down": self.down}.get(tone, self.accent)
 
     def with_accent(self, accent: str) -> Theme:
         return replace(self, accent=accent)
@@ -112,6 +122,7 @@ DARK = Theme(
     up="#66c78f",
     down="#ef7b6c",
     warn="#f0a040",
+    series=("#7db4e8", "#6cc6d8", "#ab97e6", "#7fcf9c"),
 )
 
 LIGHT = Theme(
@@ -130,6 +141,7 @@ LIGHT = Theme(
     up="#1b7f48",
     down="#b8352a",
     warn="#9a5a00",
+    series=("#1f64a6", "#0c7686", "#5a43b0", "#197a44"),
 )
 
 THEMES: dict[str, Theme] = {DARK.name: DARK, LIGHT.name: LIGHT}

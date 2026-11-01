@@ -79,8 +79,11 @@ class Poller(QObject):
             self._schedule(self._interval)
 
     def stop(self) -> None:
-        """Durdurur. Süren istek beklenmez; sonucu yok sayılır."""
+        """Durdurur. Süren istek beklenmez; sonucu yok sayılır, böylece hemen yeniden
+        başlatılabilir (panelin kapanıp açılması)."""
         self._running = False
+        self._generation += 1
+        self._in_flight = False
         self._timer.stop()
 
     @Slot()

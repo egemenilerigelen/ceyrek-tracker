@@ -9,8 +9,8 @@ kapanabilir, katlanabilir ve sıralanabilir.
 </p>
 
 > Proje geliştirme aşamasında. Şu an panel iskeleti, tema katmanı, üst bilgi satırı ve
-> **hava durumu**, **finans** (döviz, altın), **Spotify** ve **pano** kartları
-> çalışıyor. Sistem, takvim ve pil/ses kartları sırayla eklenecek.
+> **hava durumu**, **finans** (döviz, altın), **telemetri**, **Spotify**, **pano** ve **GitHub**
+> kartları çalışıyor. Takvim ve pil/ses kartları sırayla eklenecek.
 
 ## Kullanım
 
@@ -86,6 +86,34 @@ bir okunur.
   **varsayılan** çıkışı olur (yalnızca Spotify'ı değil tüm sistemi etkiler).
 - Reklam sırasında Spotify atlamayı ve şarkı geçmeyi kapatır; düğmeler de pasif görünür.
 
+### Telemetri kartı
+
+İşlemci, bellek, ekran kartı ve ağın canlı durumunu gösterir. Her satır tek satırdır: simge ve ad,
+sönük kısa bir ayrıntı (ör. `4,68 GHz`), çizgi grafik ya da doluluk çubuğu ve renkli bir değer.
+Satırın üzerine gelince tam bilgi ipucunda görünür (ör. `Ryzen 5 7500F · 4,68 GHz`). Veri panel açıkken saniyede bir okunur; panel kapanınca ya da
+kart katlanınca okuma durur.
+
+| Satır (`items` adı) | Ayrıntı (ipucunda tamamı) | Değer |
+| --- | --- | --- |
+| İşlemci (`cpu`) | model · saat hızı | kullanım % |
+| Bellek (`ram`) | kullanılan / toplam | doluluk % |
+| Ekran Kartı (`gpu`) | model · sıcaklık | kullanım % |
+| Video Belleği (`vram`) | kullanılan / toplam | doluluk % |
+| GPU Güç (`gpu_power`) | çekirdek hızı · fan | çekilen güç (W); çubuk güç sınırına oranı |
+| Ağ (`net`) | ↓ indirme ↑ yükleme (bit/sn) | ping (ms); grafik pingin geçmişi |
+
+- **Renkler:** her satırın kendi tonu vardır; doluluk %75'i geçince değer ve grafik turuncuya,
+  %90'ı geçince kırmızıya döner. Ping 100 ms'den sonra turuncu, 250 ms'den sonra (ya da yanıt
+  yoksa) kırmızıdır. Tonlar `theme/tokens.py` içinde, açık ve koyu tema için ayrı tanımlıdır.
+- **Ekran kartı** yalnızca NVIDIA'dan (sürücüyle gelen NVML) okunur. NVIDIA kartı ya da sürücüsü
+  yoksa üç GPU satırı hiç görünmez; kartın fan ya da güç bilgisi vermeyen bir modeli için yalnızca
+  o veri atlanır.
+- **Ping,** `1.1.1.1:443` adresine TCP bağlantısı kurma süresidir (ICMP yetki ister); sistem
+  okumalarından ayrı çalışır, yanıt gelmezse diğer değerler gecikmez.
+- **Satırları seçmek:** `cards` içindeki `telemetry` ayarında `items` ile (sıra korunur),
+  ör. `{"items": ["cpu", "ram", "net"]}`. Kaldırılan disk satırları (`disk_io`, `drives`) eski
+  ayar dosyalarında kalsa da yok sayılır.
+
 ### Pano kartı
 
 Son 5 kopyalanan metni, en yenisi üstte, listeler. Satırın herhangi bir yerine tıklamak
@@ -105,6 +133,24 @@ aydınlanır, tıklayınca satır geçmişten silinir (panodaki metne dokunmaz).
   satır sonlarıyla olduğu gibi geri gelir.
 - **Geçmiş diske yazılmaz:** yalnızca bellektedir; uygulama kapanınca silinir. Pano parola ya da
   gizli bilgi taşıyabileceği için bilerek böyle.
+
+### GitHub kartı
+
+GitHub katkı tablosunu gösterir: panele sığan en yeni haftalar, pazartesi üstte olacak şekilde
+kare kare; yeni hafta sağ kenardadır. Karenin üzerine gelince katkı sayısı ve tarih ipucunda
+görünür. Altında son bir yılın toplam katkısı (GitHub profilindeki sayıyla aynıdır) ve bugünde
+biten seri yazar; bugün henüz katkı yoksa seri bozulmuş sayılmaz, dünden geriye sayılır.
+
+- **Hesap ya da token gerekmez:** veri, kullanıcının herkese açık profil sayfasındaki katkı
+  parçasından okunur (`github.com/users/<ad>/contributions`). Özel depo katkıları, profilinde
+  "Private contributions" açık değilse görünmez.
+- **Kullanıcı adı:** `cards` içindeki `github` ayarında `username` ile verilir (varsayılan
+  `egemenilerigelen`), ör. `{"username": "octocat"}`. Yenileme aralığı `refresh_minutes` ile
+  (5–720, varsayılan 30) değişir. Katkılar yavaş değiştiği için panel kapalıyken de seyrek yenilenir.
+- **Renkler:** karelerin tonu GitHub'ın kendi 0–4 yoğunluk basamağını izler ve temanın vurgu
+  rengini kullanır (`accent` ile değişir); katkısız günler soluk bir iz rengindedir.
+- **Resmi API değil:** GitHub sayfa yapısını değiştirirse okuma başarısız olur; kart son tabloyu
+  başlıkta "eski veri" notuyla göstermeye devam eder, hiç veri yoksa kartta hata yazar.
 
 ## Kurulum ve çalıştırma
 
@@ -151,8 +197,10 @@ src/ceyrek_tracker/
 │   ├── __init__.py       # kart kayıt defteri (CARDS)
 │   ├── weather/          # card · api · cache · places · icon · backdrop
 │   ├── finance/          # card · catalog · models · providers · service · cache · formatting
+│   ├── telemetry/        # card · sampler (psutil) · gpu (NVML) · ping · widgets (grafikler) · icon · formatting · windows · models
 │   ├── spotify/          # card · backend · windows (WinRT + pycaw) · worker · palette · backdrop · logo · cache · models · widgets · formatting
-│   └── clipboard/        # card · history
+│   ├── clipboard/        # card · history
+│   └── github/           # card · api (profil sayfası ayrıştırıcı) · cache · models · widgets (ızgara) · icon
 ├── theme/            # tüm renk, boyut, yazı tipi: tokens.py (tek yer) + stil sayfası
 └── infra/            # kaynaktan bağımsız altyapı: paths · storage · http · logging_setup
 ```
@@ -178,4 +226,5 @@ src/ceyrek_tracker/
 - `weather.json`: son hava durumu yanıtı (internet yokken eski veriyi göstermek için)
 - `last_snapshot.json`: son finans fiyatları (aynı amaçla)
 - `spotify.json`, `spotify_cover.bin`: en son çalan şarkı ve kapağı (Spotify kapalıyken gösterilir)
+- `github.json`: son katkı tablosu (internet yokken eski tabloyu göstermek için)
 - `logs\app.log`: loglar (sorun bildirirken bu dosyayı ekleyin)

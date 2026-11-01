@@ -80,3 +80,23 @@ def test_stop_suppresses_results(qtbot, make_poller):
     gate.set()
     qtbot.wait(100)
     assert results == []
+
+
+def test_restart_while_request_is_in_flight_fetches_again(qtbot, make_poller):
+    release = threading.Event()
+    calls = []
+
+    def fetch():
+        calls.append(len(calls))
+        if len(calls) == 1:
+            release.wait(3)  # ilk istek durdurulurken hâlâ sürüyor
+        return len(calls)
+
+    poller = make_poller(fetch)
+    poller.start()
+    qtbot.waitUntil(lambda: len(calls) == 1, timeout=3000)
+    poller.stop()
+    with qtbot.waitSignal(poller.succeeded, timeout=3000) as blocker:
+        poller.start()
+    release.set()
+    assert blocker.args == [2]  # eski isteğin sonucu değil, yenisininki

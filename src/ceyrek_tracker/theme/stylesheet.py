@@ -6,13 +6,17 @@ nesne adını bilir; renk ve boyut kararları burada, tek yerde verilir.
 
 from __future__ import annotations
 
-from ceyrek_tracker.theme.tokens import ICON_FONT, UI_FONT, Metrics, Theme, rgba
+from ceyrek_tracker.theme.tokens import ICON_FONT, SERIES_TONES, UI_FONT, Metrics, Theme, rgba
 
 
 def build_stylesheet(theme: Theme, metrics: Metrics) -> str:
     t, m = theme, metrics
     # Üzerine gelince koyulaşan dolgu: koyu temada siyah, açık temada koyu mürekkep.
     shade = rgba("#000000", 0.30) if t.name == "dark" else rgba(t.ink, 0.12)
+    tones = "\n".join(
+        f'QLabel[role="metric"][tone="{tone}"] {{ color: {t.tone_color(tone)}; }}'
+        for tone in (*SERIES_TONES, "accent", "warn", "down")
+    )
     return f"""
 QLabel {{
     background: transparent;
@@ -33,6 +37,10 @@ QLabel[role="up"] {{ color: {t.up}; font-size: {m.fs(10)}px; }}
 QLabel[role="down"] {{ color: {t.down}; font-size: {m.fs(10)}px; }}
 QLabel[role="row"] {{ color: {t.text_soft}; font-size: {m.fs(10)}px; }}
 QLabel[role="row_value"] {{ color: {t.accent}; font-size: {m.fs(10)}px; font-weight: 500; }}
+QLabel[role="metric_name"] {{ color: {t.text}; font-size: {m.fs(11)}px; }}
+QLabel[role="metric_detail"] {{ color: {t.text_dim}; font-size: {m.fs(9)}px; }}
+QLabel[role="metric"] {{ color: {t.text_soft}; font-size: {m.fs(11)}px; font-weight: 500; }}
+{tones}
 QLabel[role="warn"] {{ color: {t.warn}; }}
 QLabel[role="error"] {{ color: {t.down}; font-size: {m.fs(11)}px; }}
 QLabel[role="icon"] {{
@@ -155,8 +163,11 @@ QScrollBar::handle:vertical {{
     background: transparent;
     border-radius: {m.sp(2)}px;
     min-height: {m.sp(28)}px;
+    margin: 0 0 0 {m.sp(2)}px;  /* kartlarla çubuk arasında küçük bir boşluk */
 }}
-QScrollArea[hover="true"] QScrollBar::handle:vertical {{ background: {rgba(t.ink, 0.28)}; }}
+QScrollArea[hover="true"] QScrollBar::handle:vertical:enabled {{
+    background: {rgba(t.ink, 0.28)};
+}}
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{ height: 0; }}
 QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {{ background: transparent; }}
 

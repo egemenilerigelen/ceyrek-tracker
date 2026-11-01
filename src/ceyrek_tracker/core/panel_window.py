@@ -73,7 +73,7 @@ class PanelWindow(QWidget):
         self._scroll = AutoHideScrollArea()
         inner = QWidget()
         self._column = QVBoxLayout(inner)
-        self._column.setContentsMargins(0, 0, sp(6), 0)
+        self._column.setContentsMargins(0, 0, 0, 0)  # çubuğun yeri kaydırma alanında ayrılı
         self._column.setSpacing(sp(8))
         self._column.addStretch(1)
         self._scroll.setWidget(inner)

@@ -68,13 +68,18 @@ class ClickableLabel(QLabel):
 
 
 class AutoHideScrollArea(QScrollArea):
-    """Kaydırma çubuğu yalnızca fare üzerindeyken görünür (stil sayfasındaki `hover`)."""
+    """Kaydırma çubuğu yalnızca fare üzerindeyken görünür (stil sayfasındaki `hover`).
+
+    Çubuğun yeri her zaman ayrılır (içerik sığsa da): "gerektiğinde" göstermek, içerik
+    görünür alanı aştığı an görünür genişliği çubuk kadar daraltıp kartları zıplatırdı.
+    """
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.setWidgetResizable(True)
         self.setFrameShape(QFrame.Shape.NoFrame)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.setProperty("hover", False)
 
     def _set_hover(self, value: bool) -> None:
